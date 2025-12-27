@@ -15,7 +15,7 @@
 -- ═══════════════════════════════════════════════════════════════════
 local CONFIG = {
     -- Key 验证网站链接 (你的 GitHub Pages 或其他托管链接)
-    KEY_WEBSITE = "https://austinaceeeeee222.github.io/reyfield/", -- 替换为你的网站链接
+    KEY_WEBSITE = "https://austinaceeeeee222.github.io/reyfield", -- 替换为你的网站链接
     
     -- 主脚本的 Raw 链接
     MAIN_SCRIPT = "https://raw.githubusercontent.com/austinaceeeeee222/reyfield/refs/heads/main/main.lua", -- 替换为你的脚本链接
@@ -391,38 +391,87 @@ local function CreateKeyUI()
     AddHoverEffect(GetKeyBtn, Color3.fromRGB(255, 0, 255))
     AddHoverEffect(VerifyBtn, Color3.fromRGB(0, 200, 100))
 
+    -- 链接显示框 (用于手动复制)
+    local LinkDisplayBG = Instance.new("Frame")
+    LinkDisplayBG.Name = "LinkDisplayBG"
+    LinkDisplayBG.Size = UDim2.new(1, 0, 0, 0)
+    LinkDisplayBG.Position = UDim2.new(0, 0, 0, 118)
+    LinkDisplayBG.BackgroundColor3 = Color3.fromRGB(20, 20, 35)
+    LinkDisplayBG.BorderSizePixel = 0
+    LinkDisplayBG.ClipsDescendants = true
+    LinkDisplayBG.Visible = false
+    LinkDisplayBG.Parent = ContentSection
+    
+    local LinkDisplayCorner = Instance.new("UICorner")
+    LinkDisplayCorner.CornerRadius = UDim.new(0, 8)
+    LinkDisplayCorner.Parent = LinkDisplayBG
+    
+    local LinkDisplayStroke = Instance.new("UIStroke")
+    LinkDisplayStroke.Color = Color3.fromRGB(0, 255, 255)
+    LinkDisplayStroke.Thickness = 1
+    LinkDisplayStroke.Parent = LinkDisplayBG
+    
+    local LinkLabel = Instance.new("TextBox")
+    LinkLabel.Name = "LinkLabel"
+    LinkLabel.Size = UDim2.new(1, -16, 1, 0)
+    LinkLabel.Position = UDim2.new(0, 8, 0, 0)
+    LinkLabel.BackgroundTransparency = 1
+    LinkLabel.Text = CONFIG.KEY_WEBSITE
+    LinkLabel.TextSize = 11
+    LinkLabel.Font = Enum.Font.Code
+    LinkLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
+    LinkLabel.TextXAlignment = Enum.TextXAlignment.Left
+    LinkLabel.ClearTextOnFocus = false
+    LinkLabel.TextEditable = false
+    LinkLabel.Parent = LinkDisplayBG
+    
+    local linkShowing = false
+    
     -- Get Key 按钮点击
     GetKeyBtn.MouseButton1Click:Connect(function()
-        -- 复制链接到剪贴板 (如果支持)
-        if setclipboard then
-            setclipboard(CONFIG.KEY_WEBSITE)
-            StatusLabel.Text = "✓ Link copied! Opening browser..."
-            StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 150)
-        else
-            StatusLabel.Text = "Opening key website..."
+        if not linkShowing then
+            -- 显示链接框
+            linkShowing = true
+            LinkDisplayBG.Visible = true
+            
+            -- 动画展开
+            TweenService:Create(LinkDisplayBG, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+                Size = UDim2.new(1, 0, 0, 30)
+            }):Play()
+            
+            -- 移动按钮
+            TweenService:Create(GetKeyBtn, TweenInfo.new(0.3), {
+                Position = UDim2.new(0, 0, 0, 155)
+            }):Play()
+            TweenService:Create(VerifyBtn, TweenInfo.new(0.3), {
+                Position = UDim2.new(0, 0, 0, 215)
+            }):Play()
+            
+            StatusLabel.Text = "👆 Select & copy the link above!"
             StatusLabel.TextColor3 = Color3.fromRGB(255, 200, 0)
+            GetKeyBtn.Text = "📋 COPY LINK ABOVE"
+            
+            -- 自动选中链接文字
+            LinkLabel:CaptureFocus()
+            LinkLabel.SelectionStart = 1
+            LinkLabel.CursorPosition = #CONFIG.KEY_WEBSITE + 1
+        else
+            -- 已经显示了，提示用户
+            StatusLabel.Text = "👆 Select the link and press Ctrl+C!"
+            StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
+            
+            -- 闪烁效果
+            TweenService:Create(LinkDisplayBG, TweenInfo.new(0.1), {
+                BackgroundColor3 = Color3.fromRGB(0, 100, 100)
+            }):Play()
+            task.wait(0.1)
+            TweenService:Create(LinkDisplayBG, TweenInfo.new(0.1), {
+                BackgroundColor3 = Color3.fromRGB(20, 20, 35)
+            }):Play()
+            
+            -- 再次聚焦
+            LinkLabel:CaptureFocus()
         end
-        
-        -- 打开网站
-        task.wait(0.5)
-        
-        -- 尝试不同的方式打开链接
-        local success = false
-        
-        -- 方法 1: 使用 request (某些执行器支持)
-        pcall(function()
-            if request then
-                -- 某些执行器的 request 可以打开 URL
-            end
-        end)
-        
-        -- 方法 2: 使用 Roblox 内置方法 (可能被阻止)
-        pcall(function()
-            -- 注意：Roblox 通常会阻止这个
-        end)
-        
-        StatusLabel.Text = "📋 Link: " .. CONFIG.KEY_WEBSITE
-        StatusLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
     end)
 
     -- Verify Key 按钮点击
@@ -579,7 +628,4 @@ end
 
 -- 启动
 Main()
-
-
-
 
