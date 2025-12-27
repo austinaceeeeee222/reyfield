@@ -2,7 +2,7 @@
     ╔══════════════════════════════════════════════════════════════════════════╗
     ║              🛡️ RAYSHIELD PRO - ULTIMATE AI DODGE SYSTEM 🛡️              ║
     ╠══════════════════════════════════════════════════════════════════════════╣
-    ║  Version: 5.0.0 ULTRA                                                    ║
+    ║  Version: 6.0.0 ULTRA MAX                                                ║
     ║  Author: RayShield Team                                                  ║
     ║                                                                          ║
     ║  Features:                                                               ║
@@ -13,6 +13,9 @@
     ║  • Velocity-based threat prediction                                      ║
     ║  • Smart pathfinding dodge                                               ║
     ║  • Auto-face nearest + death switch                                      ║
+    ║  • GUI Text Detection System                                             ║
+    ║  • 14-Second Precision Calculation Mode                                  ║
+    ║  • Right Arm Precision Aiming                                            ║
     ╚══════════════════════════════════════════════════════════════════════════╝
 ]]
 
@@ -24,6 +27,8 @@ local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local CoreGui = game:GetService("CoreGui")
 
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
@@ -40,8 +45,8 @@ local function ShowWelcomeNotification()
     NotifGui.Parent = PlayerGui
 
     local NotifFrame = Instance.new("Frame")
-    NotifFrame.Size = UDim2.new(0, 380, 0, 110)
-    NotifFrame.Position = UDim2.new(0.5, -190, 0, -130)
+    NotifFrame.Size = UDim2.new(0, 400, 0, 130)
+    NotifFrame.Position = UDim2.new(0.5, -200, 0, -150)
     NotifFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
     NotifFrame.BorderSizePixel = 0
     NotifFrame.Parent = NotifGui
@@ -61,51 +66,62 @@ local function ShowWelcomeNotification()
     IconLabel.Parent = NotifFrame
 
     local TitleLabel = Instance.new("TextLabel")
-    TitleLabel.Size = UDim2.new(0, 280, 0, 25)
-    TitleLabel.Position = UDim2.new(0, 80, 0, 15)
+    TitleLabel.Size = UDim2.new(0, 300, 0, 25)
+    TitleLabel.Position = UDim2.new(0, 80, 0, 12)
     TitleLabel.BackgroundTransparency = 1
-    TitleLabel.Text = "RAYSHIELD PRO ULTRA"
-    TitleLabel.TextSize = 20
+    TitleLabel.Text = "RAYSHIELD PRO ULTRA MAX"
+    TitleLabel.TextSize = 18
     TitleLabel.Font = Enum.Font.GothamBlack
     TitleLabel.TextColor3 = Color3.fromRGB(0, 255, 255)
     TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
     TitleLabel.Parent = NotifFrame
 
     local SubLabel = Instance.new("TextLabel")
-    SubLabel.Size = UDim2.new(0, 280, 0, 20)
-    SubLabel.Position = UDim2.new(0, 80, 0, 42)
+    SubLabel.Size = UDim2.new(0, 300, 0, 20)
+    SubLabel.Position = UDim2.new(0, 80, 0, 38)
     SubLabel.BackgroundTransparency = 1
-    SubLabel.Text = "✓ Advanced AI Dodge System Loaded!"
-    SubLabel.TextSize = 14
+    SubLabel.Text = "✓ Advanced AI Dodge System v6.0 Loaded!"
+    SubLabel.TextSize = 13
     SubLabel.Font = Enum.Font.Gotham
     SubLabel.TextColor3 = Color3.fromRGB(0, 255, 150)
     SubLabel.TextXAlignment = Enum.TextXAlignment.Left
     SubLabel.Parent = NotifFrame
 
     local VersionLabel = Instance.new("TextLabel")
-    VersionLabel.Size = UDim2.new(0, 280, 0, 15)
-    VersionLabel.Position = UDim2.new(0, 80, 0, 65)
+    VersionLabel.Size = UDim2.new(0, 300, 0, 15)
+    VersionLabel.Position = UDim2.new(0, 80, 0, 60)
     VersionLabel.BackgroundTransparency = 1
-    VersionLabel.Text = "v5.0 ULTRA | Spatial Awareness + Predictive Dodge"
+    VersionLabel.Text = "🎯 14-Second Precision Mode + GUI Detection"
     VersionLabel.TextSize = 11
     VersionLabel.Font = Enum.Font.Gotham
-    VersionLabel.TextColor3 = Color3.fromRGB(120, 120, 140)
+    VersionLabel.TextColor3 = Color3.fromRGB(255, 200, 100)
     VersionLabel.TextXAlignment = Enum.TextXAlignment.Left
     VersionLabel.Parent = NotifFrame
 
     local TipLabel = Instance.new("TextLabel")
-    TipLabel.Size = UDim2.new(0, 280, 0, 15)
-    TipLabel.Position = UDim2.new(0, 80, 0, 82)
+    TipLabel.Size = UDim2.new(0, 300, 0, 15)
+    TipLabel.Position = UDim2.new(0, 80, 0, 78)
     TipLabel.BackgroundTransparency = 1
-    TipLabel.Text = "💡 Hold button to toggle | Click for settings"
+    TipLabel.Text = "📡 Spatial Awareness + Right Arm Precision"
     TipLabel.TextSize = 10
     TipLabel.Font = Enum.Font.Gotham
-    TipLabel.TextColor3 = Color3.fromRGB(100, 100, 120)
+    TipLabel.TextColor3 = Color3.fromRGB(150, 150, 180)
     TipLabel.TextXAlignment = Enum.TextXAlignment.Left
     TipLabel.Parent = NotifFrame
 
+    local Tip2Label = Instance.new("TextLabel")
+    Tip2Label.Size = UDim2.new(0, 300, 0, 15)
+    Tip2Label.Position = UDim2.new(0, 80, 0, 96)
+    Tip2Label.BackgroundTransparency = 1
+    Tip2Label.Text = "💡 Hold button to toggle | Click for settings"
+    Tip2Label.TextSize = 10
+    Tip2Label.Font = Enum.Font.Gotham
+    Tip2Label.TextColor3 = Color3.fromRGB(100, 100, 120)
+    Tip2Label.TextXAlignment = Enum.TextXAlignment.Left
+    Tip2Label.Parent = NotifFrame
+
     TweenService:Create(NotifFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-        Position = UDim2.new(0.5, -190, 0, 20)
+        Position = UDim2.new(0.5, -200, 0, 20)
     }):Play()
 
     task.spawn(function()
@@ -120,7 +136,7 @@ local function ShowWelcomeNotification()
 
     task.delay(3.5, function()
         TweenService:Create(NotifFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
-            Position = UDim2.new(0.5, -190, 0, -130)
+            Position = UDim2.new(0.5, -200, 0, -150)
         }):Play()
         task.wait(0.5)
         if NotifGui and NotifGui.Parent then NotifGui:Destroy() end
@@ -134,7 +150,7 @@ ShowWelcomeNotification()
 -- ═══════════════════════════════════════════════════════════════════════════
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "DodgeAI_Ultra"
+ScreenGui.Name = "DodgeAI_UltraMax"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = PlayerGui
 
@@ -148,6 +164,22 @@ local FaceGyro = nil
 local LastDodgeDir = Vector3.new(0, 0, 0)
 local DodgeMomentum = 0
 
+-- 14-Second Precision Mode State
+local PrecisionModeState = {
+    Active = false,
+    StartTime = 0,
+    Duration = 14,
+    TargetPlayer = nil,
+    TargetDirection = Vector3.zero,
+    CalculatedAt = 0,
+    RecalculateInterval = 0.1,  -- Recalculate every 0.1 seconds for precision
+    RightArmCFrame = nil,
+    LastGUICheck = 0,
+    GUICheckInterval = 0.2,
+    TriggerText = "Players will appear in",
+    WasTriggered = false,
+}
+
 -- Spatial Cache
 local SpatialData = {
     WalkableDirections = {},
@@ -155,51 +187,155 @@ local SpatialData = {
     AvailableSpace = 0,
     LastUpdate = 0,
     SafeZones = {},
+    WalkableCount = 0,
 }
 
--- Settings (ULTRA OPTIMIZED)
+-- Settings (ULTRA MAX OPTIMIZED)
 local Settings = {
     -- Detection
-    DetectionRange = 120,
-    DodgeDistance = 10,
-    SafetyMargin = 4,
+    DetectionRange = 150,
+    DodgeDistance = 12,
+    SafetyMargin = 5,
     
     -- Movement
-    MaxSpeed = 28,
-    Acceleration = 0.25,
-    Deceleration = 0.15,
-    DodgeSensitivity = 2.0,
-    MomentumFactor = 0.3,
+    MaxSpeed = 32,
+    Acceleration = 0.3,
+    Deceleration = 0.12,
+    DodgeSensitivity = 2.5,
+    MomentumFactor = 0.35,
     
     -- Spatial Awareness
-    SpaceCheckRadius = 15,
-    SpaceCheckRays = 16,
+    SpaceCheckRadius = 20,
+    SpaceCheckRays = 24,
     WallAvoidance = true,
-    WallAvoidStrength = 1.5,
-    MinSafeSpace = 5,
+    WallAvoidStrength = 2.0,
+    MinSafeSpace = 6,
     
     -- Prediction
     PredictiveMode = true,
-    PredictionTime = 0.3,
+    PredictionTime = 0.4,
     VelocityTracking = true,
     
     -- Facing
     FaceEnabled = true,
     FaceNearest = true,
-    FaceSpeed = 8000,
+    FaceSpeed = 10000,
     LookAtHead = true,
-    TargetCheckInterval = 0.3,
+    TargetCheckInterval = 0.2,
+    
+    -- Right Arm Precision
+    RightArmPrecision = true,
+    ArmAimSpeed = 15000,
+    ArmPrecisionMode = true,
     
     -- Advanced
     MultiLayerDetection = true,
-    HeadRayWeight = 1.0,
-    BodyRayWeight = 0.6,
-    ArmRayWeight = 0.4,
+    HeadRayWeight = 1.2,
+    BodyRayWeight = 0.7,
+    ArmRayWeight = 0.5,
     PrioritizeSafeSpace = true,
+    
+    -- 14-Second Mode
+    PrecisionModeEnabled = true,
+    ContinuousDodge = true,  -- Never stop dodging in precision mode
+    PrecisionRecalcRate = 0.1,
+    
+    -- GUI Detection
+    GUIDetectionEnabled = true,
+    GUISearchDepth = 10,
 }
 
 -- Player velocity cache for prediction
 local PlayerVelocities = {}
+
+-- Right Arm Control
+local RightArmMotor = nil
+local OriginalRightArmC0 = nil
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- GUI TEXT DETECTION SYSTEM
+-- ═══════════════════════════════════════════════════════════════════════════
+
+local function SearchForTextInGui(instance, searchText, depth)
+    if depth <= 0 then return false end
+    
+    -- Check if this is a TextLabel, TextButton, or TextBox
+    if instance:IsA("TextLabel") or instance:IsA("TextButton") or instance:IsA("TextBox") then
+        local text = instance.Text
+        if text and type(text) == "string" then
+            if string.find(text:lower(), searchText:lower()) then
+                return true, instance, text
+            end
+        end
+    end
+    
+    -- Recursively search children
+    for _, child in pairs(instance:GetChildren()) do
+        local found, foundInstance, foundText = SearchForTextInGui(child, searchText, depth - 1)
+        if found then
+            return true, foundInstance, foundText
+        end
+    end
+    
+    return false
+end
+
+local function ScanAllGUIsForText(searchText)
+    -- Search in PlayerGui
+    local found, foundInstance, foundText = SearchForTextInGui(PlayerGui, searchText, Settings.GUISearchDepth)
+    if found then
+        return true, foundInstance, foundText
+    end
+    
+    -- Search in CoreGui (if accessible)
+    pcall(function()
+        found, foundInstance, foundText = SearchForTextInGui(CoreGui, searchText, Settings.GUISearchDepth)
+    end)
+    if found then
+        return true, foundInstance, foundText
+    end
+    
+    -- Search in BillboardGuis in Workspace
+    for _, obj in pairs(Workspace:GetDescendants()) do
+        if obj:IsA("BillboardGui") or obj:IsA("SurfaceGui") then
+            local f, fi, ft = SearchForTextInGui(obj, searchText, 5)
+            if f then
+                return true, fi, ft
+            end
+        end
+    end
+    
+    return false
+end
+
+local function CheckForTriggerText()
+    if not Settings.GUIDetectionEnabled then return false end
+    
+    local now = tick()
+    if now - PrecisionModeState.LastGUICheck < PrecisionModeState.GUICheckInterval then
+        return PrecisionModeState.WasTriggered
+    end
+    PrecisionModeState.LastGUICheck = now
+    
+    local found, instance, text = ScanAllGUIsForText(PrecisionModeState.TriggerText)
+    
+    if found then
+        if not PrecisionModeState.WasTriggered then
+            -- Just detected the trigger text, start precision mode
+            PrecisionModeState.WasTriggered = true
+            PrecisionModeState.Active = true
+            PrecisionModeState.StartTime = tick()
+            PrecisionModeState.CalculatedAt = 0
+            
+            print("🎯 [PRECISION MODE] Trigger detected: " .. (text or ""))
+            print("⏱️ Starting 14-second precision calculation...")
+        end
+        return true
+    else
+        PrecisionModeState.WasTriggered = false
+        return false
+    end
+end
 
 -- ═══════════════════════════════════════════════════════════════════════════
 -- UI CREATION
@@ -208,7 +344,7 @@ local PlayerVelocities = {}
 -- Main Button
 local MainBtn = Instance.new("TextButton")
 MainBtn.Size = UDim2.new(0, 70, 0, 70)
-MainBtn.Position = UDim2.new(0, 10, 0.5, 200)
+MainBtn.Position = UDim2.new(0, 10, 0.5, 180)
 MainBtn.BackgroundColor3 = Color3.fromRGB(50, 150, 255)
 MainBtn.Text = "🛡️"
 MainBtn.TextSize = 35
@@ -224,12 +360,21 @@ StatusDot.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
 StatusDot.Parent = MainBtn
 Instance.new("UICorner", StatusDot).CornerRadius = UDim.new(0, 10)
 
--- Status Panel (Expanded)
+-- Precision Mode Indicator
+local PrecisionIndicator = Instance.new("Frame")
+PrecisionIndicator.Size = UDim2.new(0, 20, 0, 20)
+PrecisionIndicator.Position = UDim2.new(0, -2, 0, -2)
+PrecisionIndicator.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
+PrecisionIndicator.BackgroundTransparency = 1
+PrecisionIndicator.Parent = MainBtn
+Instance.new("UICorner", PrecisionIndicator).CornerRadius = UDim.new(0, 10)
+
+-- Status Panel (Expanded for more info)
 local StatusPanel = Instance.new("Frame")
-StatusPanel.Size = UDim2.new(0, 220, 0, 175)
-StatusPanel.Position = UDim2.new(0, 90, 0.5, 175)
+StatusPanel.Size = UDim2.new(0, 240, 0, 220)
+StatusPanel.Position = UDim2.new(0, 90, 0.5, 150)
 StatusPanel.BackgroundColor3 = Color3.fromRGB(20, 20, 30)
-StatusPanel.BackgroundTransparency = 0.1
+StatusPanel.BackgroundTransparency = 0.08
 StatusPanel.Visible = false
 StatusPanel.Parent = ScreenGui
 Instance.new("UICorner", StatusPanel).CornerRadius = UDim.new(0, 12)
@@ -242,7 +387,7 @@ StatusStroke.Parent = StatusPanel
 
 local function MakeLabel(y, text)
     local lbl = Instance.new("TextLabel")
-    lbl.Size = UDim2.new(1, -16, 0, 20)
+    lbl.Size = UDim2.new(1, -16, 0, 18)
     lbl.Position = UDim2.new(0, 8, 0, y)
     lbl.BackgroundTransparency = 1
     lbl.Text = text
@@ -254,24 +399,28 @@ local function MakeLabel(y, text)
     return lbl
 end
 
-local TitleLbl = MakeLabel(5, "🛡️ AI DODGE ULTRA")
+local TitleLbl = MakeLabel(5, "🛡️ AI DODGE ULTRA MAX")
 TitleLbl.Font = Enum.Font.GothamBold
 TitleLbl.TextColor3 = Color3.fromRGB(0, 255, 255)
-TitleLbl.TextSize = 13
+TitleLbl.TextSize = 12
 
-local ThreatLbl = MakeLabel(28, "👁 Threats: 0")
-local DangerLbl = MakeLabel(46, "⚠️ Danger: 0%")
-local SpaceLbl = MakeLabel(64, "📐 Space: 100%")
-local FaceLbl = MakeLabel(82, "👤 Facing: None")
-local ActionLbl = MakeLabel(100, "🎮 Status: Idle")
-local PredictLbl = MakeLabel(118, "🎯 Predict: Off")
-local SpeedLbl = MakeLabel(136, "💨 Speed: 0")
-local DirsLbl = MakeLabel(154, "🧭 Safe Dirs: 0/16")
+local ThreatLbl = MakeLabel(26, "👁 Threats: 0")
+local DangerLbl = MakeLabel(44, "⚠️ Danger: 0%")
+local SpaceLbl = MakeLabel(62, "📐 Space: 100%")
+local FaceLbl = MakeLabel(80, "👤 Facing: None")
+local ActionLbl = MakeLabel(98, "🎮 Status: Idle")
+local PredictLbl = MakeLabel(116, "🎯 Predict: Off")
+local SpeedLbl = MakeLabel(134, "💨 Speed: 0")
+local DirsLbl = MakeLabel(152, "🧭 Safe Dirs: 0/24")
+local PrecisionLbl = MakeLabel(170, "⏱️ Precision: Inactive")
+PrecisionLbl.TextColor3 = Color3.fromRGB(255, 200, 100)
+local ArmLbl = MakeLabel(188, "💪 Arm Aim: Off")
+ArmLbl.TextColor3 = Color3.fromRGB(150, 200, 255)
 
 -- Settings Panel
 local SettingsPanel = Instance.new("Frame")
-SettingsPanel.Size = UDim2.new(0.92, 0, 0.75, 0)
-SettingsPanel.Position = UDim2.new(0.04, 0, 0.12, 0)
+SettingsPanel.Size = UDim2.new(0.92, 0, 0.8, 0)
+SettingsPanel.Position = UDim2.new(0.04, 0, 0.1, 0)
 SettingsPanel.BackgroundColor3 = Color3.fromRGB(20, 25, 35)
 SettingsPanel.Visible = false
 SettingsPanel.Parent = ScreenGui
@@ -294,9 +443,9 @@ local TitleText = Instance.new("TextLabel")
 TitleText.Size = UDim2.new(0.7, 0, 1, 0)
 TitleText.Position = UDim2.new(0.04, 0, 0, 0)
 TitleText.BackgroundTransparency = 1
-TitleText.Text = "⚙️ AI DODGE ULTRA Settings"
+TitleText.Text = "⚙️ AI DODGE ULTRA MAX Settings"
 TitleText.TextColor3 = Color3.new(1, 1, 1)
-TitleText.TextSize = 16
+TitleText.TextSize = 15
 TitleText.Font = Enum.Font.GothamBold
 TitleText.TextXAlignment = Enum.TextXAlignment.Left
 TitleText.Parent = TitleBar
@@ -324,54 +473,54 @@ local scrollY = 8
 
 local function AddSection(title)
     local sec = Instance.new("TextLabel")
-    sec.Size = UDim2.new(0.92, 0, 0, 28)
+    sec.Size = UDim2.new(0.92, 0, 0, 26)
     sec.Position = UDim2.new(0.04, 0, 0, scrollY)
     sec.BackgroundColor3 = Color3.fromRGB(50, 150, 255)
     sec.BackgroundTransparency = 0.6
     sec.Text = "  " .. title
     sec.TextColor3 = Color3.new(1, 1, 1)
-    sec.TextSize = 12
+    sec.TextSize = 11
     sec.Font = Enum.Font.GothamBold
     sec.TextXAlignment = Enum.TextXAlignment.Left
     sec.Parent = Scroll
     Instance.new("UICorner", sec).CornerRadius = UDim.new(0, 8)
-    scrollY = scrollY + 35
+    scrollY = scrollY + 32
 end
 
 local function AddToggle(name, icon, default, callback)
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0.92, 0, 0, 40)
+    frame.Size = UDim2.new(0.92, 0, 0, 38)
     frame.Position = UDim2.new(0.04, 0, 0, scrollY)
     frame.BackgroundColor3 = Color3.fromRGB(40, 45, 55)
     frame.Parent = Scroll
     Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
     
     local iconLbl = Instance.new("TextLabel")
-    iconLbl.Size = UDim2.new(0, 30, 1, 0)
+    iconLbl.Size = UDim2.new(0, 28, 1, 0)
     iconLbl.Position = UDim2.new(0, 5, 0, 0)
     iconLbl.BackgroundTransparency = 1
     iconLbl.Text = icon
-    iconLbl.TextSize = 16
+    iconLbl.TextSize = 14
     iconLbl.Parent = frame
     
     local nameLbl = Instance.new("TextLabel")
     nameLbl.Size = UDim2.new(0.55, 0, 1, 0)
-    nameLbl.Position = UDim2.new(0, 35, 0, 0)
+    nameLbl.Position = UDim2.new(0, 33, 0, 0)
     nameLbl.BackgroundTransparency = 1
     nameLbl.Text = name
     nameLbl.TextColor3 = Color3.new(1, 1, 1)
-    nameLbl.TextSize = 12
+    nameLbl.TextSize = 11
     nameLbl.Font = Enum.Font.GothamBold
     nameLbl.TextXAlignment = Enum.TextXAlignment.Left
     nameLbl.Parent = frame
     
     local btn = Instance.new("TextButton")
-    btn.Size = UDim2.new(0, 50, 0, 26)
-    btn.Position = UDim2.new(1, -58, 0.5, -13)
+    btn.Size = UDim2.new(0, 45, 0, 24)
+    btn.Position = UDim2.new(1, -52, 0.5, -12)
     btn.BackgroundColor3 = default and Color3.fromRGB(80, 200, 80) or Color3.fromRGB(80, 80, 95)
     btn.Text = default and "ON" or "OFF"
     btn.TextColor3 = Color3.new(1, 1, 1)
-    btn.TextSize = 11
+    btn.TextSize = 10
     btn.Font = Enum.Font.GothamBold
     btn.Parent = frame
     Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
@@ -384,58 +533,58 @@ local function AddToggle(name, icon, default, callback)
         callback(on)
     end)
     
-    scrollY = scrollY + 47
+    scrollY = scrollY + 44
 end
 
 local function AddSlider(name, icon, min, max, default, unit, callback)
     local frame = Instance.new("Frame")
-    frame.Size = UDim2.new(0.92, 0, 0, 55)
+    frame.Size = UDim2.new(0.92, 0, 0, 50)
     frame.Position = UDim2.new(0.04, 0, 0, scrollY)
     frame.BackgroundColor3 = Color3.fromRGB(40, 45, 55)
     frame.Parent = Scroll
     Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 10)
     
     local iconLbl = Instance.new("TextLabel")
-    iconLbl.Size = UDim2.new(0, 25, 0, 20)
+    iconLbl.Size = UDim2.new(0, 22, 0, 18)
     iconLbl.Position = UDim2.new(0, 6, 0, 4)
     iconLbl.BackgroundTransparency = 1
     iconLbl.Text = icon
-    iconLbl.TextSize = 14
+    iconLbl.TextSize = 12
     iconLbl.Parent = frame
     
     local nameLbl = Instance.new("TextLabel")
-    nameLbl.Size = UDim2.new(0.5, 0, 0, 20)
-    nameLbl.Position = UDim2.new(0, 32, 0, 4)
+    nameLbl.Size = UDim2.new(0.5, 0, 0, 18)
+    nameLbl.Position = UDim2.new(0, 28, 0, 4)
     nameLbl.BackgroundTransparency = 1
     nameLbl.Text = name
     nameLbl.TextColor3 = Color3.new(1, 1, 1)
-    nameLbl.TextSize = 11
+    nameLbl.TextSize = 10
     nameLbl.Font = Enum.Font.GothamBold
     nameLbl.TextXAlignment = Enum.TextXAlignment.Left
     nameLbl.Parent = frame
     
     local valLbl = Instance.new("TextLabel")
-    valLbl.Size = UDim2.new(0, 50, 0, 20)
-    valLbl.Position = UDim2.new(1, -55, 0, 4)
+    valLbl.Size = UDim2.new(0, 45, 0, 18)
+    valLbl.Position = UDim2.new(1, -50, 0, 4)
     valLbl.BackgroundTransparency = 1
     valLbl.Text = default .. unit
     valLbl.TextColor3 = Color3.fromRGB(100, 200, 255)
-    valLbl.TextSize = 11
+    valLbl.TextSize = 10
     valLbl.Font = Enum.Font.GothamBold
     valLbl.Parent = frame
     
     local sliderBg = Instance.new("Frame")
-    sliderBg.Size = UDim2.new(0.88, 0, 0, 12)
-    sliderBg.Position = UDim2.new(0.06, 0, 0, 32)
+    sliderBg.Size = UDim2.new(0.88, 0, 0, 10)
+    sliderBg.Position = UDim2.new(0.06, 0, 0, 30)
     sliderBg.BackgroundColor3 = Color3.fromRGB(25, 28, 38)
     sliderBg.Parent = frame
-    Instance.new("UICorner", sliderBg).CornerRadius = UDim.new(0, 6)
+    Instance.new("UICorner", sliderBg).CornerRadius = UDim.new(0, 5)
     
     local sliderFill = Instance.new("Frame")
     sliderFill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0)
     sliderFill.BackgroundColor3 = Color3.fromRGB(50, 150, 255)
     sliderFill.Parent = sliderBg
-    Instance.new("UICorner", sliderFill).CornerRadius = UDim.new(0, 6)
+    Instance.new("UICorner", sliderFill).CornerRadius = UDim.new(0, 5)
     
     local sliderHit = Instance.new("TextButton")
     sliderHit.Size = UDim2.new(1, 0, 1, 10)
@@ -449,11 +598,7 @@ local function AddSlider(name, icon, min, max, default, unit, callback)
     local function update(input)
         local rel = math.clamp((input.Position.X - sliderBg.AbsolutePosition.X) / sliderBg.AbsoluteSize.X, 0, 1)
         local val = min + (max - min) * rel
-        if max - min > 5 then
-            val = math.floor(val)
-        else
-            val = math.floor(val * 10) / 10
-        end
+        if max - min > 5 then val = math.floor(val) else val = math.floor(val * 10) / 10 end
         sliderFill.Size = UDim2.new(rel, 0, 1, 0)
         valLbl.Text = val .. unit
         callback(val)
@@ -478,7 +623,7 @@ local function AddSlider(name, icon, min, max, default, unit, callback)
         end
     end)
     
-    scrollY = scrollY + 62
+    scrollY = scrollY + 56
 end
 
 -- Settings Options
@@ -491,6 +636,13 @@ AddToggle("Enable System", "🛡️", false, function(v)
 end)
 AddToggle("Debug Mode", "🔍", false, function(v) DebugMode = v end)
 
+AddSection("🎯 14-Second Precision Mode")
+AddToggle("Precision Mode", "⏱️", true, function(v) Settings.PrecisionModeEnabled = v end)
+AddToggle("GUI Detection", "📡", true, function(v) Settings.GUIDetectionEnabled = v end)
+AddToggle("Continuous Dodge", "🏃", true, function(v) Settings.ContinuousDodge = v end)
+AddToggle("Right Arm Precision", "💪", true, function(v) Settings.RightArmPrecision = v end)
+AddSlider("Precision Calc Rate", "⚡", 0.05, 0.5, 0.1, "s", function(v) Settings.PrecisionRecalcRate = v end)
+
 AddSection("🧠 Advanced AI")
 AddToggle("Predictive Dodge", "🎯", true, function(v) Settings.PredictiveMode = v end)
 AddToggle("Wall Avoidance", "🧱", true, function(v) Settings.WallAvoidance = v end)
@@ -498,30 +650,32 @@ AddToggle("Multi-Layer Detection", "📡", true, function(v) Settings.MultiLayer
 AddToggle("Prioritize Safe Space", "🛡️", true, function(v) Settings.PrioritizeSafeSpace = v end)
 
 AddSection("📐 Spatial Awareness")
-AddSlider("Space Check Radius", "📏", 5, 30, 15, "m", function(v) Settings.SpaceCheckRadius = v end)
-AddSlider("Min Safe Space", "🔒", 2, 15, 5, "m", function(v) Settings.MinSafeSpace = v end)
-AddSlider("Wall Avoid Strength", "🧱", 0.5, 3, 1.5, "x", function(v) Settings.WallAvoidStrength = v end)
+AddSlider("Space Check Radius", "📏", 8, 35, 20, "m", function(v) Settings.SpaceCheckRadius = v end)
+AddSlider("Space Check Rays", "🔢", 12, 36, 24, "", function(v) Settings.SpaceCheckRays = v end)
+AddSlider("Min Safe Space", "🔒", 3, 20, 6, "m", function(v) Settings.MinSafeSpace = v end)
+AddSlider("Wall Avoid Strength", "🧱", 0.5, 4, 2, "x", function(v) Settings.WallAvoidStrength = v end)
 
 AddSection("👤 Facing Settings")
 AddToggle("Face Players", "🎯", true, function(v) Settings.FaceEnabled = v end)
 AddToggle("Face Nearest", "📍", true, function(v) Settings.FaceNearest = v end)
 AddToggle("Look at Head", "👁️", true, function(v) Settings.LookAtHead = v end)
-AddSlider("Turn Speed", "🔄", 2000, 15000, 8000, "", function(v) Settings.FaceSpeed = v end)
+AddSlider("Turn Speed", "🔄", 3000, 20000, 10000, "", function(v) Settings.FaceSpeed = v end)
 
 AddSection("🏃 Dodge Settings")
-AddSlider("Detection Range", "📡", 50, 200, 120, "m", function(v) Settings.DetectionRange = v end)
-AddSlider("Dodge Distance", "↔️", 5, 25, 10, "m", function(v) Settings.DodgeDistance = v end)
-AddSlider("Safety Margin", "🔒", 2, 15, 4, "m", function(v) Settings.SafetyMargin = v end)
-AddSlider("Max Speed", "💨", 20, 50, 28, "", function(v) Settings.MaxSpeed = v end)
-AddSlider("Sensitivity", "⚡", 1, 4, 2, "x", function(v) Settings.DodgeSensitivity = v end)
-AddSlider("Acceleration", "🚀", 0.1, 0.5, 0.25, "", function(v) Settings.Acceleration = v end)
+AddSlider("Detection Range", "📡", 80, 250, 150, "m", function(v) Settings.DetectionRange = v end)
+AddSlider("Dodge Distance", "↔️", 6, 30, 12, "m", function(v) Settings.DodgeDistance = v end)
+AddSlider("Safety Margin", "🔒", 3, 18, 5, "m", function(v) Settings.SafetyMargin = v end)
+AddSlider("Max Speed", "💨", 24, 60, 32, "", function(v) Settings.MaxSpeed = v end)
+AddSlider("Sensitivity", "⚡", 1.5, 5, 2.5, "x", function(v) Settings.DodgeSensitivity = v end)
+AddSlider("Acceleration", "🚀", 0.15, 0.6, 0.3, "", function(v) Settings.Acceleration = v end)
 
-AddSection("🎯 Prediction")
-AddSlider("Predict Time", "⏱️", 0.1, 1, 0.3, "s", function(v) Settings.PredictionTime = v end)
-AddSlider("Head Ray Weight", "👤", 0.5, 2, 1, "x", function(v) Settings.HeadRayWeight = v end)
-AddSlider("Body Ray Weight", "🫁", 0.2, 1.5, 0.6, "x", function(v) Settings.BodyRayWeight = v end)
+AddSection("🎯 Prediction & Weights")
+AddSlider("Predict Time", "⏱️", 0.1, 1.2, 0.4, "s", function(v) Settings.PredictionTime = v end)
+AddSlider("Head Ray Weight", "👤", 0.6, 2.5, 1.2, "x", function(v) Settings.HeadRayWeight = v end)
+AddSlider("Body Ray Weight", "🫁", 0.3, 1.8, 0.7, "x", function(v) Settings.BodyRayWeight = v end)
+AddSlider("Arm Ray Weight", "💪", 0.2, 1.2, 0.5, "x", function(v) Settings.ArmRayWeight = v end)
 
-Scroll.CanvasSize = UDim2.new(0, 0, 0, scrollY + 10)
+Scroll.CanvasSize = UDim2.new(0, 0, 0, scrollY + 15)
 
 -- ═══════════════════════════════════════════════════════════════════════════
 -- DEBUG VISUALIZATION
@@ -542,12 +696,12 @@ local function DebugRay(from, dir, len, color, transparency)
     p.Anchored, p.CanCollide = true, false
     p.Material = Enum.Material.Neon
     p.Color = color
-    p.Size = Vector3.new(0.1, 0.1, len)
+    p.Size = Vector3.new(0.08, 0.08, len)
     p.CFrame = CFrame.new((from + to) / 2, to)
     p.Transparency = transparency or 0.4
     p.Parent = Workspace
     table.insert(DebugParts, p)
-    task.delay(0.1, function() if p.Parent then p:Destroy() end end)
+    task.delay(0.08, function() if p.Parent then p:Destroy() end end)
 end
 
 local function DebugBall(pos, size, color, transparency)
@@ -562,7 +716,7 @@ local function DebugBall(pos, size, color, transparency)
     p.Transparency = transparency or 0.5
     p.Parent = Workspace
     table.insert(DebugParts, p)
-    task.delay(0.1, function() if p.Parent then p:Destroy() end end)
+    task.delay(0.08, function() if p.Parent then p:Destroy() end end)
 end
 
 -- ═══════════════════════════════════════════════════════════════════════════
@@ -573,7 +727,7 @@ RaycastParams.FilterType = Enum.RaycastFilterType.Exclude
 
 local function UpdateSpatialData(myPos, myChar)
     local now = tick()
-    if now - SpatialData.LastUpdate < 0.05 then return end
+    if now - SpatialData.LastUpdate < 0.04 then return end
     SpatialData.LastUpdate = now
     
     RaycastParams.FilterDescendantsInstances = {myChar}
@@ -583,7 +737,6 @@ local function UpdateSpatialData(myPos, myChar)
     local walkableCount = 0
     local totalSpace = 0
     
-    -- Cast rays in all directions
     local numRays = Settings.SpaceCheckRays
     for i = 0, numRays - 1 do
         local angle = (i / numRays) * math.pi * 2
@@ -593,9 +746,7 @@ local function UpdateSpatialData(myPos, myChar)
         local result = Workspace:Raycast(origin, dir * Settings.SpaceCheckRadius, RaycastParams)
         
         local distance = Settings.SpaceCheckRadius
-        if result then
-            distance = result.Distance
-        end
+        if result then distance = result.Distance end
         
         local dirData = {
             direction = dir,
@@ -612,39 +763,30 @@ local function UpdateSpatialData(myPos, myChar)
             table.insert(SpatialData.BlockedDirections, dirData)
         end
         
-        -- Debug visualization
         if DebugMode then
             local color = distance >= Settings.MinSafeSpace and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
             DebugRay(origin, dir, distance, color, 0.7)
         end
     end
     
-    -- Calculate available space percentage
     SpatialData.AvailableSpace = (totalSpace / (numRays * Settings.SpaceCheckRadius)) * 100
     SpatialData.WalkableCount = walkableCount
 end
 
--- Find best dodge direction considering space
 local function GetBestDodgeDirection(baseDodgeDir, myPos, myChar)
-    if not Settings.PrioritizeSafeSpace then
-        return baseDodgeDir
-    end
+    if not Settings.PrioritizeSafeSpace then return baseDodgeDir end
     
     UpdateSpatialData(myPos, myChar)
     
-    if #SpatialData.WalkableDirections == 0 then
-        return baseDodgeDir -- No safe directions, use base
-    end
+    if #SpatialData.WalkableDirections == 0 then return baseDodgeDir end
     
-    -- Find walkable direction closest to desired dodge direction
     local bestDir = nil
     local bestScore = -math.huge
     
     for _, dirData in pairs(SpatialData.WalkableDirections) do
-        -- Score based on: alignment with dodge direction + available space
         local alignment = baseDodgeDir:Dot(dirData.direction)
         local spaceBonus = dirData.distance / Settings.SpaceCheckRadius
-        local score = alignment * 0.7 + spaceBonus * 0.3
+        local score = alignment * 0.65 + spaceBonus * 0.35
         
         if score > bestScore then
             bestScore = score
@@ -653,8 +795,7 @@ local function GetBestDodgeDirection(baseDodgeDir, myPos, myChar)
     end
     
     if bestDir then
-        -- Blend between base dodge and safe direction
-        local blendFactor = 0.6
+        local blendFactor = 0.55
         return (baseDodgeDir * (1 - blendFactor) + bestDir * blendFactor).Unit
     end
     
@@ -662,7 +803,7 @@ local function GetBestDodgeDirection(baseDodgeDir, myPos, myChar)
 end
 
 -- ═══════════════════════════════════════════════════════════════════════════
--- PLAYER VELOCITY TRACKING (for prediction)
+-- PLAYER VELOCITY TRACKING
 -- ═══════════════════════════════════════════════════════════════════════════
 local function UpdatePlayerVelocities()
     for _, player in pairs(Players:GetPlayers()) do
@@ -697,14 +838,97 @@ end
 
 local function GetPlayerVelocity(player)
     local data = PlayerVelocities[player.UserId]
-    if data then
-        return data.velocity
-    end
+    if data then return data.velocity end
     return Vector3.zero
 end
 
 -- ═══════════════════════════════════════════════════════════════════════════
--- THREAT DETECTION (ULTRA OPTIMIZED)
+-- RIGHT ARM PRECISION AIMING
+-- ═══════════════════════════════════════════════════════════════════════════
+local function GetRightArmMotor(char)
+    if not char then return nil end
+    
+    -- R15
+    local rightUpperArm = char:FindFirstChild("RightUpperArm")
+    if rightUpperArm then
+        local motor = rightUpperArm:FindFirstChild("RightShoulder")
+        if motor and motor:IsA("Motor6D") then
+            return motor, "R15"
+        end
+    end
+    
+    -- R6
+    local torso = char:FindFirstChild("Torso")
+    if torso then
+        local motor = torso:FindFirstChild("Right Shoulder")
+        if motor and motor:IsA("Motor6D") then
+            return motor, "R6"
+        end
+    end
+    
+    return nil, nil
+end
+
+local function AimRightArmAt(char, targetPos)
+    if not Settings.RightArmPrecision then return end
+    if not char then return end
+    
+    local motor, rigType = GetRightArmMotor(char)
+    if not motor then return end
+    
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    
+    -- Calculate direction to target
+    local shoulderPos
+    if rigType == "R15" then
+        local rightUpperArm = char:FindFirstChild("RightUpperArm")
+        if rightUpperArm then shoulderPos = rightUpperArm.Position end
+    else
+        local rightArm = char:FindFirstChild("Right Arm")
+        if rightArm then shoulderPos = rightArm.Position + Vector3.new(0, 1, 0) end
+    end
+    
+    if not shoulderPos then return end
+    
+    local direction = (targetPos - shoulderPos).Unit
+    local baseC0 = OriginalRightArmC0 or motor.C0
+    
+    if not OriginalRightArmC0 then
+        OriginalRightArmC0 = motor.C0
+    end
+    
+    -- Calculate rotation to point at target
+    local hrpCF = hrp.CFrame
+    local localDir = hrpCF:VectorToObjectSpace(direction)
+    
+    -- Create aim rotation
+    local aimAngleY = math.atan2(localDir.X, -localDir.Z)
+    local aimAngleX = math.asin(math.clamp(localDir.Y, -1, 1))
+    
+    -- Apply rotation (limited for natural look)
+    aimAngleY = math.clamp(aimAngleY, -math.rad(90), math.rad(45))
+    aimAngleX = math.clamp(aimAngleX, -math.rad(60), math.rad(60))
+    
+    local targetC0 = baseC0 * CFrame.Angles(aimAngleX, aimAngleY, 0)
+    
+    -- Smooth interpolation
+    motor.C0 = motor.C0:Lerp(targetC0, 0.15)
+    
+    PrecisionModeState.RightArmCFrame = motor.C0
+end
+
+local function ResetRightArm(char)
+    if not char then return end
+    
+    local motor, rigType = GetRightArmMotor(char)
+    if motor and OriginalRightArmC0 then
+        motor.C0 = OriginalRightArmC0
+    end
+end
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- THREAT DETECTION
 -- ═══════════════════════════════════════════════════════════════════════════
 local function PointToRayDistance(point, origin, dir)
     local toPoint = point - origin
@@ -720,31 +944,18 @@ local function CalculateThreat(myPos, playerChar, playerVelocity)
     
     local head = playerChar:FindFirstChild("Head")
     local hrp = playerChar:FindFirstChild("HumanoidRootPart")
-    local leftArm = playerChar:FindFirstChild("Left Arm") or playerChar:FindFirstChild("LeftHand")
-    local rightArm = playerChar:FindFirstChild("Right Arm") or playerChar:FindFirstChild("RightHand")
+    local leftArm = playerChar:FindFirstChild("Left Arm") or playerChar:FindFirstChild("LeftHand") or playerChar:FindFirstChild("LeftUpperArm")
+    local rightArm = playerChar:FindFirstChild("Right Arm") or playerChar:FindFirstChild("RightHand") or playerChar:FindFirstChild("RightUpperArm")
     
     if not head or not hrp then return threats, 0 end
     
     local dist = (hrp.Position - myPos).Magnitude
     if dist > Settings.DetectionRange then return threats, 0 end
     
-    -- Predict future position if enabled
-    local predictedPos = myPos
-    if Settings.PredictiveMode then
-        local myChar = LocalPlayer.Character
-        if myChar then
-            local myHRP = myChar:FindFirstChild("HumanoidRootPart")
-            if myHRP then
-                -- Don't predict our own position, predict enemy's aim
-            end
-        end
-    end
-    
-    -- Head ray (highest priority)
+    -- Head ray
     local headDir = head.CFrame.LookVector
     if Settings.PredictiveMode and playerVelocity.Magnitude > 1 then
-        -- Adjust look direction based on movement
-        local moveInfluence = playerVelocity.Unit * 0.2
+        local moveInfluence = playerVelocity.Unit * 0.25
         headDir = (headDir + Vector3.new(moveInfluence.X, 0, moveInfluence.Z)).Unit
     end
     
@@ -752,11 +963,8 @@ local function CalculateThreat(myPos, playerChar, playerVelocity)
     
     if headDist < Settings.DodgeDistance and headClosest then
         local danger = (1 - headDist / Settings.DodgeDistance) * Settings.HeadRayWeight
-        
-        -- Distance falloff
-        local distFactor = 1 - (dist / Settings.DetectionRange) * 0.5
+        local distFactor = 1 - (dist / Settings.DetectionRange) * 0.4
         danger = danger * distFactor
-        
         totalDanger = totalDanger + danger
         
         table.insert(threats, {
@@ -768,16 +976,16 @@ local function CalculateThreat(myPos, playerChar, playerVelocity)
             origin = head.Position,
         })
         
-        DebugRay(head.Position, headDir, 50, Color3.fromRGB(255, 50, 50), 0.3)
-        DebugBall(headClosest, 0.6, Color3.fromRGB(255, 255, 0), 0.4)
+        DebugRay(head.Position, headDir, 55, Color3.fromRGB(255, 50, 50), 0.3)
+        DebugBall(headClosest, 0.5, Color3.fromRGB(255, 255, 0), 0.4)
     end
     
     -- Body ray
     local bodyDir = hrp.CFrame.LookVector
-    local bodyDist, bodyClosest, bodyProj = PointToRayDistance(myPos, hrp.Position, bodyDir)
+    local bodyDist, bodyClosest = PointToRayDistance(myPos, hrp.Position, bodyDir)
     
-    if bodyDist < Settings.DodgeDistance * 0.9 and bodyClosest then
-        local danger = (1 - bodyDist / (Settings.DodgeDistance * 0.9)) * Settings.BodyRayWeight
+    if bodyDist < Settings.DodgeDistance * 0.85 and bodyClosest then
+        local danger = (1 - bodyDist / (Settings.DodgeDistance * 0.85)) * Settings.BodyRayWeight
         totalDanger = totalDanger + danger
         
         table.insert(threats, {
@@ -789,10 +997,10 @@ local function CalculateThreat(myPos, playerChar, playerVelocity)
             origin = hrp.Position,
         })
         
-        DebugRay(hrp.Position, bodyDir, 40, Color3.fromRGB(255, 150, 50), 0.4)
+        DebugRay(hrp.Position, bodyDir, 45, Color3.fromRGB(255, 150, 50), 0.4)
     end
     
-    -- Arm rays (if multi-layer enabled)
+    -- Arm rays
     if Settings.MultiLayerDetection then
         local arms = {leftArm, rightArm}
         for _, arm in pairs(arms) do
@@ -800,8 +1008,8 @@ local function CalculateThreat(myPos, playerChar, playerVelocity)
                 local armDir = arm.CFrame.LookVector
                 local armDist, armClosest = PointToRayDistance(myPos, arm.Position, armDir)
                 
-                if armDist < Settings.DodgeDistance * 0.7 and armClosest then
-                    local danger = (1 - armDist / (Settings.DodgeDistance * 0.7)) * Settings.ArmRayWeight
+                if armDist < Settings.DodgeDistance * 0.65 and armClosest then
+                    local danger = (1 - armDist / (Settings.DodgeDistance * 0.65)) * Settings.ArmRayWeight
                     totalDanger = totalDanger + danger
                     
                     table.insert(threats, {
@@ -813,7 +1021,7 @@ local function CalculateThreat(myPos, playerChar, playerVelocity)
                         origin = arm.Position,
                     })
                     
-                    DebugRay(arm.Position, armDir, 30, Color3.fromRGB(255, 200, 50), 0.5)
+                    DebugRay(arm.Position, armDir, 35, Color3.fromRGB(255, 200, 50), 0.5)
                 end
             end
         end
@@ -823,14 +1031,13 @@ local function CalculateThreat(myPos, playerChar, playerVelocity)
 end
 
 -- ═══════════════════════════════════════════════════════════════════════════
--- DODGE CALCULATION (ULTRA OPTIMIZED)
+-- DODGE CALCULATION
 -- ═══════════════════════════════════════════════════════════════════════════
 local function CalculateDodgeVector(myPos, allThreats)
     local dodgeDir = Vector3.zero
     local totalWeight = 0
     
     for _, threat in pairs(allThreats) do
-        -- Calculate escape vector
         local away = myPos - threat.closest
         away = Vector3.new(away.X, 0, away.Z)
         
@@ -839,14 +1046,10 @@ local function CalculateDodgeVector(myPos, allThreats)
             dodgeDir = dodgeDir + away.Unit * weight
             totalWeight = totalWeight + weight
         else
-            -- Too close to ray, dodge perpendicular
             local perp = threat.direction:Cross(Vector3.new(0, 1, 0))
             if perp.Magnitude > 0.1 then
                 local dir = perp.Unit
-                -- Choose side based on momentum
-                if LastDodgeDir:Dot(dir) < 0 then
-                    dir = -dir
-                end
+                if LastDodgeDir:Dot(dir) < 0 then dir = -dir end
                 local weight = threat.danger * Settings.DodgeSensitivity
                 dodgeDir = dodgeDir + dir * weight
                 totalWeight = totalWeight + weight
@@ -854,10 +1057,7 @@ local function CalculateDodgeVector(myPos, allThreats)
         end
     end
     
-    if dodgeDir.Magnitude < 0.1 then
-        return Vector3.zero, 0
-    end
-    
+    if dodgeDir.Magnitude < 0.1 then return Vector3.zero, 0 end
     return dodgeDir.Unit, totalWeight
 end
 
@@ -872,12 +1072,7 @@ local function GetOtherPlayers()
             local hrp = player.Character:FindFirstChild("HumanoidRootPart")
             local hum = player.Character:FindFirstChild("Humanoid")
             if head and hrp and hum and hum.Health > 0 then
-                table.insert(others, {
-                    Player = player,
-                    Head = head,
-                    HRP = hrp,
-                    Humanoid = hum,
-                })
+                table.insert(others, { Player = player, Head = head, HRP = hrp, Humanoid = hum })
             end
         end
     end
@@ -886,87 +1081,125 @@ end
 
 local function GetNearestPlayer(others, myPos)
     if #others == 0 then return nil end
-    
-    local nearest = nil
-    local nearestDist = math.huge
-    
+    local nearest, nearestDist = nil, math.huge
     for _, data in pairs(others) do
         local dist = (data.HRP.Position - myPos).Magnitude
-        if dist < nearestDist then
-            nearestDist = dist
-            nearest = data
-        end
+        if dist < nearestDist then nearestDist = dist nearest = data end
     end
-    
     return nearest
 end
 
 local function IsTargetValid(targetPlayer)
-    if not targetPlayer then return false end
-    if not targetPlayer.Character then return false end
+    if not targetPlayer or not targetPlayer.Character then return false end
     local hum = targetPlayer.Character:FindFirstChild("Humanoid")
-    if not hum or hum.Health <= 0 then return false end
-    return true
+    return hum and hum.Health > 0
 end
 
 local function SelectFaceTarget(others, myPos)
-    if #others == 0 then
-        CurrentFaceTarget = nil
-        return nil
-    end
+    if #others == 0 then CurrentFaceTarget = nil return nil end
     
     local now = tick()
     local needNewTarget = not IsTargetValid(CurrentFaceTarget)
     
     if now - LastTargetCheck > Settings.TargetCheckInterval then
         LastTargetCheck = now
-        if Settings.FaceNearest then
-            needNewTarget = true
-        end
+        if Settings.FaceNearest then needNewTarget = true end
     end
     
     if needNewTarget then
         if Settings.FaceNearest then
             local nearest = GetNearestPlayer(others, myPos)
-            if nearest then
-                CurrentFaceTarget = nearest.Player
-            end
+            if nearest then CurrentFaceTarget = nearest.Player end
         else
             CurrentFaceTarget = others[math.random(#others)].Player
         end
     end
     
     for _, o in pairs(others) do
-        if o.Player == CurrentFaceTarget then
-            return o
-        end
+        if o.Player == CurrentFaceTarget then return o end
     end
     
     if Settings.FaceNearest then
         local nearest = GetNearestPlayer(others, myPos)
-        if nearest then
-            CurrentFaceTarget = nearest.Player
-            return nearest
-        end
+        if nearest then CurrentFaceTarget = nearest.Player return nearest end
     end
     
     return others[1]
 end
 
 local function GetOrCreateGyro(hrp)
-    if FaceGyro and FaceGyro.Parent == hrp then
-        return FaceGyro
-    end
+    if FaceGyro and FaceGyro.Parent == hrp then return FaceGyro end
     if FaceGyro then FaceGyro:Destroy() end
     
     FaceGyro = Instance.new("BodyGyro")
     FaceGyro.Name = "FaceGyro"
     FaceGyro.MaxTorque = Vector3.new(0, Settings.FaceSpeed, 0)
-    FaceGyro.P = 15000
-    FaceGyro.D = 800
+    FaceGyro.P = 18000
+    FaceGyro.D = 1000
     FaceGyro.Parent = hrp
     
     return FaceGyro
+end
+
+-- ═══════════════════════════════════════════════════════════════════════════
+-- 14-SECOND PRECISION MODE
+-- ═══════════════════════════════════════════════════════════════════════════
+local function UpdatePrecisionMode(myPos, myChar, others)
+    if not Settings.PrecisionModeEnabled then
+        PrecisionModeState.Active = false
+        return
+    end
+    
+    -- Check for trigger text
+    CheckForTriggerText()
+    
+    if not PrecisionModeState.Active then
+        PrecisionIndicator.BackgroundTransparency = 1
+        PrecisionLbl.Text = "⏱️ Precision: Inactive"
+        PrecisionLbl.TextColor3 = Color3.fromRGB(150, 150, 150)
+        return
+    end
+    
+    local elapsed = tick() - PrecisionModeState.StartTime
+    local remaining = math.max(0, PrecisionModeState.Duration - elapsed)
+    
+    if remaining <= 0 then
+        PrecisionModeState.Active = false
+        PrecisionIndicator.BackgroundTransparency = 1
+        PrecisionLbl.Text = "⏱️ Precision: Complete"
+        PrecisionLbl.TextColor3 = Color3.fromRGB(0, 255, 100)
+        ResetRightArm(myChar)
+        return
+    end
+    
+    -- Update UI
+    PrecisionIndicator.BackgroundTransparency = 0
+    PrecisionIndicator.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
+    PrecisionLbl.Text = string.format("⏱️ Precision: %.1fs", remaining)
+    PrecisionLbl.TextColor3 = Color3.fromRGB(255, 200, 100)
+    
+    -- Pulse animation for indicator
+    local pulse = math.sin(tick() * 8) * 0.3 + 0.7
+    PrecisionIndicator.BackgroundTransparency = 1 - pulse
+    
+    -- Recalculate target direction
+    local now = tick()
+    if now - PrecisionModeState.CalculatedAt >= Settings.PrecisionRecalcRate then
+        PrecisionModeState.CalculatedAt = now
+        
+        local nearest = GetNearestPlayer(others, myPos)
+        if nearest then
+            PrecisionModeState.TargetPlayer = nearest.Player
+            PrecisionModeState.TargetDirection = (nearest.HRP.Position - myPos).Unit
+            
+            -- Aim right arm at target
+            if Settings.RightArmPrecision then
+                AimRightArmAt(myChar, nearest.HRP.Position)
+                ArmLbl.Text = "💪 Arm Aim: " .. nearest.Player.DisplayName
+                ArmLbl.TextColor3 = Color3.fromRGB(100, 255, 150)
+            end
+        end
+    end
 end
 
 -- ═══════════════════════════════════════════════════════════════════════════
@@ -985,11 +1218,10 @@ RunService.Heartbeat:Connect(function(dt)
     local myPos = hrp.Position
     local others = GetOtherPlayers()
     
-    -- Update velocity tracking
+    -- Update systems
     UpdatePlayerVelocities()
-    
-    -- Update spatial data
     UpdateSpatialData(myPos, char)
+    UpdatePrecisionMode(myPos, char, others)
     
     -- Collect all threats
     local allThreats = {}
@@ -1004,7 +1236,6 @@ RunService.Heartbeat:Connect(function(dt)
             if danger > 0 then
                 threatCount = threatCount + 1
                 totalDanger = totalDanger + danger
-                
                 for _, threat in pairs(threats) do
                     table.insert(allThreats, threat)
                 end
@@ -1014,6 +1245,19 @@ RunService.Heartbeat:Connect(function(dt)
     
     -- Calculate dodge direction
     local dodgeDir, dodgeWeight = CalculateDodgeVector(myPos, allThreats)
+    
+    -- In precision mode with continuous dodge, always try to dodge
+    if PrecisionModeState.Active and Settings.ContinuousDodge then
+        if dodgeDir.Magnitude < 0.1 and PrecisionModeState.TargetDirection.Magnitude > 0.1 then
+            -- No immediate threat, but keep moving perpendicular to target
+            local perpDir = PrecisionModeState.TargetDirection:Cross(Vector3.new(0, 1, 0))
+            if perpDir.Magnitude > 0.1 then
+                dodgeDir = perpDir.Unit
+                if LastDodgeDir:Dot(dodgeDir) < 0 then dodgeDir = -dodgeDir end
+                totalDanger = math.max(totalDanger, 0.3) -- Minimum danger to keep moving
+            end
+        end
+    end
     
     -- Apply spatial awareness
     if dodgeDir.Magnitude > 0.1 then
@@ -1026,9 +1270,7 @@ RunService.Heartbeat:Connect(function(dt)
             local repulsion = -blocked.direction * (1 - blocked.distance / Settings.MinSafeSpace) * Settings.WallAvoidStrength
             dodgeDir = dodgeDir + Vector3.new(repulsion.X, 0, repulsion.Z)
         end
-        if dodgeDir.Magnitude > 0.1 then
-            dodgeDir = dodgeDir.Unit
-        end
+        if dodgeDir.Magnitude > 0.1 then dodgeDir = dodgeDir.Unit end
     end
     
     -- Update UI
@@ -1072,18 +1314,18 @@ RunService.Heartbeat:Connect(function(dt)
     end
     
     -- Execute dodge movement
-    if dodgeDir.Magnitude > 0.1 and totalDanger > 0.05 then
-        -- Apply momentum
+    local shouldDodge = dodgeDir.Magnitude > 0.1 and (totalDanger > 0.05 or (PrecisionModeState.Active and Settings.ContinuousDodge))
+    
+    if shouldDodge then
         if LastDodgeDir.Magnitude > 0.1 then
             dodgeDir = (dodgeDir + LastDodgeDir * Settings.MomentumFactor).Unit
         end
         LastDodgeDir = dodgeDir
         
-        -- Calculate speed
         local speedFactor = math.min(1, totalDanger * Settings.DodgeSensitivity)
-        local targetSpeed = Settings.MaxSpeed * speedFactor * 0.4
+        if PrecisionModeState.Active then speedFactor = math.max(speedFactor, 0.5) end
         
-        -- Smooth acceleration
+        local targetSpeed = Settings.MaxSpeed * speedFactor * 0.4
         DodgeMomentum = DodgeMomentum + (targetSpeed - DodgeMomentum) * Settings.Acceleration
         
         local targetVel = dodgeDir * DodgeMomentum
@@ -1092,11 +1334,13 @@ RunService.Heartbeat:Connect(function(dt)
         local targetPos = myPos + currentVelocity
         hum:MoveTo(targetPos)
         
-        -- Update UI
         local currentSpeed = currentVelocity.Magnitude
         SpeedLbl.Text = string.format("💨 Speed: %.1f", currentSpeed)
         
-        if totalDanger > 0.7 then
+        if PrecisionModeState.Active then
+            ActionLbl.Text = "🎮 PRECISION EVADE!"
+            ActionLbl.TextColor3 = Color3.fromRGB(255, 200, 100)
+        elseif totalDanger > 0.7 then
             ActionLbl.Text = "🎮 EMERGENCY EVADE!"
             ActionLbl.TextColor3 = Color3.fromRGB(255, 80, 80)
         elseif totalDanger > 0.4 then
@@ -1108,9 +1352,8 @@ RunService.Heartbeat:Connect(function(dt)
         end
         
         DebugRay(myPos, dodgeDir, 5, Color3.fromRGB(0, 255, 100), 0.2)
-        DebugBall(targetPos, 0.5, Color3.fromRGB(0, 255, 100), 0.3)
+        DebugBall(targetPos, 0.4, Color3.fromRGB(0, 255, 100), 0.3)
     else
-        -- Decelerate
         DodgeMomentum = DodgeMomentum * (1 - Settings.Deceleration)
         currentVelocity = currentVelocity:Lerp(Vector3.zero, Settings.Deceleration)
         LastDodgeDir = LastDodgeDir * 0.9
@@ -1118,6 +1361,11 @@ RunService.Heartbeat:Connect(function(dt)
         SpeedLbl.Text = "💨 Speed: 0"
         ActionLbl.Text = "🎮 Monitoring..."
         ActionLbl.TextColor3 = Color3.fromRGB(150, 150, 150)
+        
+        if not Settings.RightArmPrecision or not PrecisionModeState.Active then
+            ArmLbl.Text = "💪 Arm Aim: Off"
+            ArmLbl.TextColor3 = Color3.fromRGB(150, 150, 180)
+        end
     end
     
     -- Face target
@@ -1147,7 +1395,6 @@ CloseBtn.MouseButton1Click:Connect(function()
     SettingsPanel.Visible = false
 end)
 
--- Long press toggle
 local holding = false
 MainBtn.MouseButton1Down:Connect(function()
     holding = true
@@ -1160,7 +1407,12 @@ MainBtn.MouseButton1Down:Connect(function()
                 StatusDot.BackgroundColor3 = Enabled and Color3.fromRGB(80, 255, 80) or Color3.fromRGB(100, 100, 100)
                 StatusPanel.Visible = Enabled
                 
-                if not Enabled and FaceGyro then FaceGyro:Destroy() FaceGyro = nil end
+                if not Enabled then
+                    if FaceGyro then FaceGyro:Destroy() FaceGyro = nil end
+                    PrecisionModeState.Active = false
+                    local char = LocalPlayer.Character
+                    if char then ResetRightArm(char) end
+                end
                 
                 MainBtn.Size = UDim2.new(0, 80, 0, 80)
                 task.wait(0.1)
@@ -1185,17 +1437,24 @@ LocalPlayer.CharacterAdded:Connect(function()
     LastDodgeDir = Vector3.zero
     DodgeMomentum = 0
     PlayerVelocities = {}
+    OriginalRightArmC0 = nil
+    PrecisionModeState.Active = false
+    PrecisionModeState.WasTriggered = false
     ClearDebug()
 end)
 
 -- ═══════════════════════════════════════════════════════════════════════════
 -- STARTUP
 -- ═══════════════════════════════════════════════════════════════════════════
-print("═══════════════════════════════════════════════════════")
-print("✅ RAYSHIELD PRO ULTRA v5.0 Loaded!")
-print("🧠 Advanced AI with Spatial Awareness")
-print("📐 Walkable Space Detection Active")
-print("🎯 Predictive Dodge System Ready")
-print("🧱 Wall Avoidance Enabled")
+print("═══════════════════════════════════════════════════════════════")
+print("✅ RAYSHIELD PRO ULTRA MAX v6.0 Loaded!")
+print("═══════════════════════════════════════════════════════════════")
+print("🎯 14-Second Precision Mode Active")
+print("📡 GUI Text Detection: 'Players will appear in'")
+print("💪 Right Arm Precision Aiming Enabled")
+print("📐 24-Ray Spatial Awareness System")
+print("🧱 Advanced Wall Avoidance")
+print("🏃 Continuous Dodge Mode Ready")
+print("═══════════════════════════════════════════════════════════════")
 print("💡 Hold button to toggle | Click for settings")
-print("═══════════════════════════════════════════════════════")
+print("═══════════════════════════════════════════════════════════════")
