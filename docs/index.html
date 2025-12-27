@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 RAYSHIELD PRO | Key System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #0a0a0f;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        /* 3D 动态背景 */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* 网格动画层 */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+
+        /* 粒子效果 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00ffff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+            animation: particleFloat 8s infinite ease-in-out;
+        }
+
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+        }
+
+        /* 主容器 */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Logo 区域 */
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-icon {
+            font-size: 80px;
+            animation: logoPulse 2s ease-in-out infinite;
+            text-shadow: 0 0 30px #00ffff, 0 0 60px #00ffff;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.1); filter: brightness(1.3); }
+        }
+
+        .logo-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ffff, #ff00ff, #00ffff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+            text-shadow: none;
+            margin-top: 15px;
+            letter-spacing: 5px;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .logo-subtitle {
+            font-size: 18px;
+            color: #888;
+            margin-top: 10px;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        /* 主卡片 */
+        .key-card {
+            background: linear-gradient(135deg, rgba(20, 20, 40, 0.9), rgba(10, 10, 20, 0.95));
+            border: 2px solid transparent;
+            border-image: linear-gradient(135deg, #00ffff, #ff00ff) 1;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 0 40px rgba(0, 255, 255, 0.2),
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .key-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, #00ffff, transparent, #ff00ff, transparent);
+            animation: borderRotate 4s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes borderRotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .key-card-inner {
+            background: rgba(10, 10, 20, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        /* 步骤指示器 */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step.active {
+            background: linear-gradient(135deg, #00ffff, #00aaff);
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .step.completed {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            border-color: #00ff88;
+        }
+
+        .step-line {
+            width: 30px;
+            height: 3px;
+            background: #333;
+            align-self: center;
+            transition: background 0.3s ease;
+        }
+
+        .step-line.active {
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+        }
+
+        /* 阶段内容 */
+        .phase {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .phase.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .phase-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #00ffff;
+        }
+
+        .phase-desc {
+            color: #aaa;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            width: 100%;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Orbitron', monospace;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00ffff, #00aaff);
+            color: #000;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.6);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #ff00ff, #aa00ff);
+            color: #fff;
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.4);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 50px rgba(255, 0, 255, 0.6);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            color: #000;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .btn:hover::after {
+            animation: btnShine 0.5s ease;
+        }
+
+        @keyframes btnShine {
+            0% { left: -50%; opacity: 1; }
+            100% { left: 150%; opacity: 0; }
+        }
+
+        /* 验证码区域 */
+        .captcha-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .captcha-title {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .captcha-puzzle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .captcha-item {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .captcha-item:hover {
+            background: rgba(0, 255, 255, 0.2);
+            border-color: #00ffff;
+            transform: scale(1.1);
+        }
+
+        .captcha-item.selected {
+            background: rgba(0, 255, 255, 0.3);
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .captcha-question {
+            color: #fff;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        /* Key 输入区域 */
+        .key-input-container {
+            margin-bottom: 20px;
+        }
+
+        .key-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #333;
+            border-radius: 10px;
+            color: #00ffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 16px;
+            text-align: center;
+            letter-spacing: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .key-input:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .key-input::placeholder {
+            color: #555;
+        }
+
+        /* Key 显示区域 */
+        .key-display {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+            border: 2px solid #00ffff;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .key-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .key-value {
+            font-family: 'Orbitron', monospace;
+            font-size: 20px;
+            color: #00ffff;
+            word-break: break-all;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+
+        .key-expiry {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: #ff9900;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #00ffff;
+            border-radius: 8px;
+            padding: 8px 15px;
+            color: #00ffff;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(0, 255, 255, 0.4);
+        }
+
+        /* 进度条 */
+        .progress-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* 倒计时 */
+        .countdown {
+            font-family: 'Orbitron', monospace;
+            font-size: 48px;
+            color: #00ffff;
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            margin: 20px 0;
+        }
+
+        /* 通知 Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #00ff88, #00cc66);
+            color: #000;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 9999;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            color: #fff;
+        }
+
+        /* 警告框 */
+        .warning-box {
+            background: rgba(255, 153, 0, 0.1);
+            border: 1px solid #ff9900;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .warning-icon {
+            font-size: 24px;
+        }
+
+        .warning-text {
+            font-size: 14px;
+            color: #ff9900;
+        }
+
+        /* 成功动画 */
+        .success-animation {
+            font-size: 80px;
+            animation: successBounce 0.5s ease;
+        }
+
+        @keyframes successBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        /* 社交链接 */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: rgba(0, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #555;
+            font-size: 12px;
+        }
+
+        /* 加载动画 */
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 255, 255, 0.3);
+            border-top-color: #00ffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 霓虹边框动画 */
+        .neon-border {
+            position: relative;
+        }
+
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #00ffff);
+            background-size: 400% 400%;
+            border-radius: inherit;
+            z-index: -1;
+            animation: neonGlow 3s ease infinite;
+        }
+
+        @keyframes neonGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* 响应式 */
+        @media (max-width: 600px) {
+            .logo-title {
+                font-size: 32px;
+            }
+
+            .key-card {
+                padding: 20px;
+            }
+
+            .btn {
+                padding: 15px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D 背景画布 -->
+    <canvas id="bg-canvas"></canvas>
+    
+    <!-- 网格覆盖层 -->
+    <div class="grid-overlay"></div>
+    
+    <!-- 粒子效果 -->
+    <div class="particles" id="particles"></div>
+
+    <!-- 通知 Toast -->
+    <div class="toast" id="toast">✓ Copied to clipboard!</div>
+
+    <div class="main-container">
+        <!-- Logo 区域 -->
+        <div class="logo-section">
+            <div class="logo-icon">🛡️</div>
+            <h1 class="logo-title">RAYSHIELD</h1>
+            <p class="logo-subtitle">PRO KEY SYSTEM</p>
+        </div>
+
+        <!-- 主卡片 -->
+        <div class="key-card">
+            <div class="key-card-inner">
+                <!-- 步骤指示器 -->
+                <div class="step-indicator">
+                    <div class="step active" id="step1">1</div>
+                    <div class="step-line" id="line1"></div>
+                    <div class="step" id="step2">2</div>
+                    <div class="step-line" id="line2"></div>
+                    <div class="step" id="step3">3</div>
+                </div>
+
+                <!-- 阶段 1: 验证码 -->
+                <div class="phase active" id="phase1">
+                    <h2 class="phase-title">🤖 Human Verification</h2>
+                    <p class="phase-desc">Complete the captcha to prove you're not a robot</p>
+                    
+                    <div class="captcha-container">
+                        <div class="captcha-title">Select all: <span id="captcha-target"></span></div>
+                        <div class="captcha-puzzle" id="captcha-puzzle"></div>
+                    </div>
+                    
+                    <button class="btn btn-primary" id="verify-captcha-btn" disabled>
+                        VERIFY
+                    </button>
+                </div>
+
+                <!-- 阶段 2: Get Key (第一次) -->
+                <div class="phase" id="phase2">
+                    <h2 class="phase-title">🔑 Get Your Key</h2>
+                    <p class="phase-desc">Click the button below to get your checkpoint #1</p>
+                    
+                    <div class="warning-box">
+                        <span class="warning-icon">⚠️</span>
+                        <span class="warning-text">You may be redirected. Please complete the ad to continue.</span>
+                    </div>
+                    
+                    <button class="btn btn-secondary" id="getkey-btn1">
+                        🔗 GET KEY (1/2)
+                    </button>
+                    
+                    <div class="progress-container" style="margin-top: 20px;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress1" style="width: 0%"></div>
+                        </div>
+                        <div class="progress-text" id="progress-text1">Waiting for checkpoint...</div>
+                    </div>
+                </div>
+
+                <!-- 阶段 3: Get Key (第二次) -->
+                <div class="phase" id="phase3">
+                    <h2 class="phase-title">🔑 Almost There!</h2>
+                    <p class="phase-desc">Complete the final checkpoint to generate your key</p>
+                    
+                    <div class="countdown" id="countdown">05</div>
+                    <p class="phase-desc">Cooldown before next step...</p>
+                    
+                    <button class="btn btn-secondary" id="getkey-btn2" disabled>
+                        🔗 GET KEY (2/2)
+                    </button>
+                </div>
+
+                <!-- 阶段 4: Key 生成 -->
+                <div class="phase" id="phase4">
+                    <div class="success-animation">🎉</div>
+                    <h2 class="phase-title">KEY GENERATED!</h2>
+                    
+                    <div class="key-display">
+                        <button class="copy-btn" id="copy-key-btn">📋 COPY</button>
+                        <div class="key-label">Your Unique Key</div>
+                        <div class="key-value" id="generated-key">XXXX-XXXX-XXXX-XXXX</div>
+                        <div class="key-expiry">⏰ Expires in: <span id="key-expiry">24 hours</span></div>
+                    </div>
+                    
+                    <p class="phase-desc">Copy the key above and paste it in-game to activate!</p>
+                    
+                    <button class="btn btn-success" id="done-btn">
+                        ✓ COPY & CLOSE
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 社交链接 -->
+        <div class="social-links">
+            <a href="#" class="social-link">💬</a>
+            <a href="#" class="social-link">📺</a>
+            <a href="#" class="social-link">🐦</a>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>RAYSHIELD PRO © 2024 | All Rights Reserved</p>
+            <p style="margin-top: 5px; color: #333;">Powered by Advanced Key System v3.0</p>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 3D 背景动画 ====================
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // 3D 粒子系统
+        class Particle3D {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.z = Math.random() * 1000;
+                this.size = Math.random() * 3 + 1;
+                this.speedZ = Math.random() * 2 + 1;
+                this.color = `hsl(${180 + Math.random() * 60}, 100%, 50%)`;
+            }
+
+            update() {
+                this.z -= this.speedZ;
+                if (this.z <= 0) {
+                    this.reset();
+                    this.z = 1000;
+                }
+            }
+
+            draw() {
+                const scale = 500 / this.z;
+                const x2d = (this.x - canvas.width / 2) * scale + canvas.width / 2;
+                const y2d = (this.y - canvas.height / 2) * scale + canvas.height / 2;
+                const size = this.size * scale;
+
+                ctx.beginPath();
+                ctx.arc(x2d, y2d, Math.max(size, 0.5), 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = Math.min(1, (1000 - this.z) / 500);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        const particles3D = [];
+        for (let i = 0; i < 200; i++) {
+            particles3D.push(new Particle3D());
+        }
+
+        // 连线效果
+        function drawConnections() {
+            for (let i = 0; i < particles3D.length; i++) {
+                for (let j = i + 1; j < particles3D.length; j++) {
+                    const p1 = particles3D[i];
+                    const p2 = particles3D[j];
+                    
+                    const scale1 = 500 / p1.z;
+                    const scale2 = 500 / p2.z;
+                    
+                    const x1 = (p1.x - canvas.width / 2) * scale1 + canvas.width / 2;
+                    const y1 = (p1.y - canvas.height / 2) * scale1 + canvas.height / 2;
+                    const x2 = (p2.x - canvas.width / 2) * scale2 + canvas.width / 2;
+                    const y2 = (p2.y - canvas.height / 2) * scale2 + canvas.height / 2;
+                    
+                    const dist = Math.hypot(x2 - x1, y2 - y1);
+                    
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(x1, y1);
+                        ctx.lineTo(x2, y2);
+                        ctx.strokeStyle = `rgba(0, 255, 255, ${(100 - dist) / 500})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 15, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles3D.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            drawConnections();
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // ==================== 浮动粒子 ====================
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // ==================== Key System 逻辑 ====================
+
+        // 验证码数据
+        const captchaEmojis = {
+            '🐱': ['🐱', '😺', '🐈', '😸'],
+            '🐶': ['🐶', '🐕', '🦮', '🐩'],
+            '🚗': ['🚗', '🚙', '🏎️', '🚘'],
+            '🍎': ['🍎', '🍏', '🍐', '🍊'],
+            '⭐': ['⭐', '🌟', '✨', '💫'],
+            '🔥': ['🔥', '🔥', '🔥', '🔥']
+        };
+
+        const allEmojis = ['🐱', '🐶', '🚗', '🍎', '⭐', '🔥', '🌈', '🎮', '🎯', '🎪', '🎨', '🎭', '🏀', '⚽', '🎸', '🎹'];
+
+        let currentCaptchaTarget = '';
+        let selectedCaptcha = new Set();
+        let correctCaptcha = new Set();
+        let currentPhase = 1;
+        let checkpoint1Done = false;
+        let checkpoint2Done = false;
+
+        // 广告/重定向链接 (Linkvertise 风格)
+        const adLinks = [
+            'https://linkvertise.com/', // 真正的 Linkvertise
+            'https://link-center.net/',
+            'https://link-target.net/',
+            'https://direct-link.net/'
+        ];
+
+        const randomAdLinks = [
+            'https://www.google.com',
+            'https://www.youtube.com',
+            'https://www.twitter.com',
+            'https://www.reddit.com'
+        ];
+
+        // 生成验证码
+        function generateCaptcha() {
+            const targets = Object.keys(captchaEmojis);
+            currentCaptchaTarget = targets[Math.floor(Math.random() * targets.length)];
+            document.getElementById('captcha-target').textContent = currentCaptchaTarget;
+
+            const puzzleContainer = document.getElementById('captcha-puzzle');
+            puzzleContainer.innerHTML = '';
+
+            // 添加正确答案
+            correctCaptcha = new Set();
+            const correctItems = captchaEmojis[currentCaptchaTarget];
+            const numCorrect = Math.floor(Math.random() * 2) + 2; // 2-3 个正确的
+
+            const puzzleItems = [];
+            for (let i = 0; i < numCorrect; i++) {
+                const emoji = correctItems[Math.floor(Math.random() * correctItems.length)];
+                puzzleItems.push({ emoji, correct: true });
+            }
+
+            // 添加干扰项
+            const numWrong = 6 - numCorrect;
+            const wrongEmojis = allEmojis.filter(e => !correctItems.includes(e) && e !== currentCaptchaTarget);
+            for (let i = 0; i < numWrong; i++) {
+                const emoji = wrongEmojis[Math.floor(Math.random() * wrongEmojis.length)];
+                puzzleItems.push({ emoji, correct: false });
+            }
+
+            // 打乱顺序
+            puzzleItems.sort(() => Math.random() - 0.5);
+
+            puzzleItems.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'captcha-item';
+                div.textContent = item.emoji;
+                div.dataset.index = index;
+                div.dataset.correct = item.correct;
+
+                if (item.correct) {
+                    correctCaptcha.add(index.toString());
+                }
+
+                div.addEventListener('click', () => {
+                    div.classList.toggle('selected');
+                    if (div.classList.contains('selected')) {
+                        selectedCaptcha.add(index.toString());
+                    } else {
+                        selectedCaptcha.delete(index.toString());
+                    }
+                    updateVerifyButton();
+                });
+
+                puzzleContainer.appendChild(div);
+            });
+
+            selectedCaptcha = new Set();
+        }
+
+        function updateVerifyButton() {
+            const btn = document.getElementById('verify-captcha-btn');
+            btn.disabled = selectedCaptcha.size === 0;
+        }
+
+        // 验证验证码
+        function verifyCaptcha() {
+            const isCorrect = 
+                selectedCaptcha.size === correctCaptcha.size &&
+                [...selectedCaptcha].every(item => correctCaptcha.has(item));
+
+            if (isCorrect) {
+                showToast('✓ Verification passed!');
+                goToPhase(2);
+            } else {
+                showToast('✗ Wrong selection. Try again!', true);
+                generateCaptcha();
+            }
+        }
+
+        // 显示 Toast 通知
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast' + (isError ? ' error' : '');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // 切换阶段
+        function goToPhase(phase) {
+            document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+            document.getElementById('phase' + phase).classList.add('active');
+
+            // 更新步骤指示器
+            for (let i = 1; i <= 3; i++) {
+                const step = document.getElementById('step' + i);
+                const line = document.getElementById('line' + (i - 1));
+                
+                if (i < phase) {
+                    step.classList.remove('active');
+                    step.classList.add('completed');
+                    step.textContent = '✓';
+                    if (line) line.classList.add('active');
+                } else if (i === phase) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                    step.textContent = i;
+                } else {
+                    step.classList.remove('active', 'completed');
+                    step.textContent = i;
+                }
+            }
+
+            currentPhase = phase;
+
+            // 如果是阶段3，启动倒计时
+            if (phase === 3) {
+                startCountdown();
+            }
+        }
+
+        // Get Key 按钮 1
+        function handleGetKey1() {
+            // 随机决定是否先跳转到随机网站
+            const skipToAd = Math.random() > 0.3; // 70% 概率直接去 Linkvertise
+
+            if (skipToAd) {
+                // 跳转到 Linkvertise 风格链接
+                const link = adLinks[Math.floor(Math.random() * adLinks.length)];
+                window.open(link, '_blank');
+            } else {
+                // 先跳到随机网站
+                const randomLink = randomAdLinks[Math.floor(Math.random() * randomAdLinks.length)];
+                window.open(randomLink, '_blank');
+            }
+
+            // 模拟进度
+            simulateProgress('progress1', 'progress-text1', () => {
+                checkpoint1Done = true;
+                showToast('✓ Checkpoint 1 complete!');
+                goToPhase(3);
+            });
+        }
+
+        // Get Key 按钮 2
+        function handleGetKey2() {
+            const link = adLinks[Math.floor(Math.random() * adLinks.length)];
+            window.open(link, '_blank');
+
+            // 生成 Key
+            setTimeout(() => {
+                checkpoint2Done = true;
+                generateKey();
+                goToPhase(4);
+            }, 3000);
+        }
+
+        // 模拟进度条
+        function simulateProgress(progressId, textId, callback) {
+            const progressFill = document.getElementById(progressId);
+            const progressText = document.getElementById(textId);
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += Math.random() * 15 + 5;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    progressText.textContent = 'Checkpoint complete!';
+                    callback();
+                } else {
+                    progressFill.style.width = progress + '%';
+                    progressText.textContent = `Processing... ${Math.floor(progress)}%`;
+                }
+            }, 500);
+        }
+
+        // 倒计时
+        function startCountdown() {
+            let seconds = 5;
+            const countdownEl = document.getElementById('countdown');
+            const btn = document.getElementById('getkey-btn2');
+
+            const interval = setInterval(() => {
+                seconds--;
+                countdownEl.textContent = seconds.toString().padStart(2, '0');
+
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    countdownEl.textContent = '00';
+                    btn.disabled = false;
+                }
+            }, 1000);
+        }
+
+        // 生成 Key
+        function generateKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let key = '';
+            for (let i = 0; i < 4; i++) {
+                for (let j = 0; j < 4; j++) {
+                    key += chars[Math.floor(Math.random() * chars.length)];
+                }
+                if (i < 3) key += '-';
+            }
+
+            document.getElementById('generated-key').textContent = key;
+
+            // 设置过期时间
+            const expiry = new Date();
+            expiry.setHours(expiry.getHours() + 24);
+            document.getElementById('key-expiry').textContent = '24 hours';
+
+            // 保存到 localStorage
+            localStorage.setItem('rayshield_key', key);
+            localStorage.setItem('rayshield_expiry', expiry.toISOString());
+
+            return key;
+        }
+
+        // 复制 Key
+        function copyKey() {
+            const key = document.getElementById('generated-key').textContent;
+            navigator.clipboard.writeText(key).then(() => {
+                showToast('✓ Key copied to clipboard!');
+            });
+        }
+
+        // 检查是否有已存在的有效 Key
+        function checkExistingKey() {
+            const savedKey = localStorage.getItem('rayshield_key');
+            const savedExpiry = localStorage.getItem('rayshield_expiry');
+
+            if (savedKey && savedExpiry) {
+                const expiryDate = new Date(savedExpiry);
+                if (expiryDate > new Date()) {
+                    // Key 仍然有效
+                    document.getElementById('generated-key').textContent = savedKey;
+                    const hoursLeft = Math.ceil((expiryDate - new Date()) / (1000 * 60 * 60));
+                    document.getElementById('key-expiry').textContent = hoursLeft + ' hours';
+                    goToPhase(4);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // ==================== 初始化 ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            // 检查已有 Key
+            if (!checkExistingKey()) {
+                generateCaptcha();
+            }
+
+            // 事件监听
+            document.getElementById('verify-captcha-btn').addEventListener('click', verifyCaptcha);
+            document.getElementById('getkey-btn1').addEventListener('click', handleGetKey1);
+            document.getElementById('getkey-btn2').addEventListener('click', handleGetKey2);
+            document.getElementById('copy-key-btn').addEventListener('click', copyKey);
+            document.getElementById('done-btn').addEventListener('click', () => {
+                copyKey();
+                showToast('✓ Key copied! Return to game.');
+            });
+        });
+
+        // ==================== URL 参数处理 (Linkvertise 回调) ====================
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('checkpoint')) {
+            const checkpoint = urlParams.get('checkpoint');
+            if (checkpoint === '1' && currentPhase === 2) {
+                checkpoint1Done = true;
+                goToPhase(3);
+            } else if (checkpoint === '2' && currentPhase === 3) {
+                checkpoint2Done = true;
+                generateKey();
+                goToPhase(4);
+            }
+        }
+    </script>
+</body>
+</html>
+
