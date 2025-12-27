@@ -1,23 +1,21 @@
 --[[
     ╔══════════════════════════════════════════════════════════════════════════╗
-    ║                    🛡️ RAYSHIELD PRO - AI躲避系统 🛡️                       ║
+    ║                    🛡️ RAYSHIELD PRO - AI DODGE SYSTEM 🛡️                 ║
     ╠══════════════════════════════════════════════════════════════════════════╣
-    ║  版本 / Version: 3.0.0                                                   ║
-    ║  作者 / Author: RayShield Team                                           ║
+    ║  Version: 4.0.0                                                          ║
+    ║  Author: RayShield Team                                                  ║
     ║                                                                          ║
-    ║  功能 / Features:                                                         ║
-    ║  • 智能射线检测躲避系统                                                   ║
-    ║  • 自动面向最近玩家                                                       ║
-    ║  • 可调节参数设置面板                                                     ║
-    ║  • 调试可视化模式                                                         ║
-    ║                                                                          ║
-    ║  使用方法:                                                                ║
-    ║  通过 loader.lua 加载，需要先完成 Key 验证                               ║
+    ║  Features:                                                               ║
+    ║  • Intelligent ray-based dodge system                                    ║
+    ║  • Auto-face nearest player                                              ║
+    ║  • Auto-switch target on death                                           ║
+    ║  • Adjustable settings panel                                             ║
+    ║  • Debug visualization mode                                              ║
     ╚══════════════════════════════════════════════════════════════════════════╝
 ]]
 
 -- ═══════════════════════════════════════════════════════════════════════════
--- 欢迎消息 / WELCOME MESSAGE
+-- WELCOME NOTIFICATION
 -- ═══════════════════════════════════════════════════════════════════════════
 
 local Players = game:GetService("Players")
@@ -25,7 +23,6 @@ local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- 创建欢迎通知
 local function ShowWelcomeNotification()
     local NotifGui = Instance.new("ScreenGui")
     NotifGui.Name = "RayShield_Welcome"
@@ -35,32 +32,19 @@ local function ShowWelcomeNotification()
     NotifGui.Parent = PlayerGui
 
     local NotifFrame = Instance.new("Frame")
-    NotifFrame.Name = "NotifFrame"
     NotifFrame.Size = UDim2.new(0, 350, 0, 100)
     NotifFrame.Position = UDim2.new(0.5, -175, 0, -120)
     NotifFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 25)
     NotifFrame.BorderSizePixel = 0
     NotifFrame.Parent = NotifGui
-
-    local NotifCorner = Instance.new("UICorner")
-    NotifCorner.CornerRadius = UDim.new(0, 15)
-    NotifCorner.Parent = NotifFrame
+    Instance.new("UICorner", NotifFrame).CornerRadius = UDim.new(0, 15)
 
     local NotifStroke = Instance.new("UIStroke")
     NotifStroke.Color = Color3.fromRGB(0, 255, 255)
     NotifStroke.Thickness = 2
     NotifStroke.Parent = NotifFrame
 
-    local NotifGradient = Instance.new("UIGradient")
-    NotifGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 20, 35)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 20))
-    })
-    NotifGradient.Rotation = 45
-    NotifGradient.Parent = NotifFrame
-
     local IconLabel = Instance.new("TextLabel")
-    IconLabel.Name = "Icon"
     IconLabel.Size = UDim2.new(0, 60, 0, 60)
     IconLabel.Position = UDim2.new(0, 15, 0.5, -30)
     IconLabel.BackgroundTransparency = 1
@@ -69,7 +53,6 @@ local function ShowWelcomeNotification()
     IconLabel.Parent = NotifFrame
 
     local TitleLabel = Instance.new("TextLabel")
-    TitleLabel.Name = "Title"
     TitleLabel.Size = UDim2.new(0, 250, 0, 25)
     TitleLabel.Position = UDim2.new(0, 80, 0, 18)
     TitleLabel.BackgroundTransparency = 1
@@ -81,7 +64,6 @@ local function ShowWelcomeNotification()
     TitleLabel.Parent = NotifFrame
 
     local SubLabel = Instance.new("TextLabel")
-    SubLabel.Name = "Sub"
     SubLabel.Size = UDim2.new(0, 250, 0, 20)
     SubLabel.Position = UDim2.new(0, 80, 0, 45)
     SubLabel.BackgroundTransparency = 1
@@ -93,23 +75,20 @@ local function ShowWelcomeNotification()
     SubLabel.Parent = NotifFrame
 
     local VersionLabel = Instance.new("TextLabel")
-    VersionLabel.Name = "Version"
     VersionLabel.Size = UDim2.new(0, 250, 0, 15)
     VersionLabel.Position = UDim2.new(0, 80, 0, 68)
     VersionLabel.BackgroundTransparency = 1
-    VersionLabel.Text = "v3.0.0 | Hold button to toggle"
+    VersionLabel.Text = "v4.0.0 | Hold button to toggle"
     VersionLabel.TextSize = 11
     VersionLabel.Font = Enum.Font.Gotham
     VersionLabel.TextColor3 = Color3.fromRGB(120, 120, 140)
     VersionLabel.TextXAlignment = Enum.TextXAlignment.Left
     VersionLabel.Parent = NotifFrame
 
-    -- 动画进入
     TweenService:Create(NotifFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
         Position = UDim2.new(0.5, -175, 0, 20)
     }):Play()
 
-    -- 彩虹边框动画
     task.spawn(function()
         local hue = 0
         local startTime = tick()
@@ -120,27 +99,20 @@ local function ShowWelcomeNotification()
         end
     end)
 
-    -- 3秒后淡出
     task.delay(3, function()
         TweenService:Create(NotifFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
             Position = UDim2.new(0.5, -175, 0, -120)
         }):Play()
-        
         task.wait(0.5)
-        if NotifGui and NotifGui.Parent then
-            NotifGui:Destroy()
-        end
+        if NotifGui and NotifGui.Parent then NotifGui:Destroy() end
     end)
 end
 
--- 显示欢迎通知
 ShowWelcomeNotification()
 
 -- ═══════════════════════════════════════════════════════════════════════════
--- 以下是你的原始代码 (完整保留，未简化)
+-- MAIN SCRIPT
 -- ═══════════════════════════════════════════════════════════════════════════
-
--- LocalScript 放在 StarterPlayerScripts 或 StarterGui 中
 
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -149,19 +121,19 @@ local Workspace = game:GetService("Workspace")
 local UserInputService = game:GetService("UserInputService")
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "DodgeAI_Fixed"
+ScreenGui.Name = "DodgeAI_Pro"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
--- 系统状态
+-- System State
 local Enabled = false
 local DebugMode = false
 local CurrentFaceTarget = nil
-local LastTargetSwitch = 0
+local LastTargetCheck = 0
 local currentVelocity = Vector3.new(0, 0, 0)
 local FaceGyro = nil
 
--- 设置
+-- Settings
 local Settings = {
     DetectionRange = 100,
     DodgeDistance = 8,
@@ -171,11 +143,12 @@ local Settings = {
     MoveSmooth = 0.15,
     FaceEnabled = true,
     FaceSpeed = 5000,
-    TargetSwitchTime = 2.5,
+    FaceNearest = true,  -- NEW: Face nearest player instead of random
+    TargetCheckInterval = 0.5,  -- How often to check for new nearest target
     LookAtHead = true,
 }
 
--- 主按钮
+-- Main Button
 local MainBtn = Instance.new("TextButton")
 MainBtn.Size = UDim2.new(0, 70, 0, 70)
 MainBtn.Position = UDim2.new(0, 10, 0.5, 200)
@@ -194,7 +167,7 @@ StatusDot.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
 StatusDot.Parent = MainBtn
 Instance.new("UICorner", StatusDot).CornerRadius = UDim.new(0, 10)
 
--- 状态面板
+-- Status Panel
 local StatusPanel = Instance.new("Frame")
 StatusPanel.Size = UDim2.new(0, 200, 0, 130)
 StatusPanel.Position = UDim2.new(0, 90, 0.5, 200)
@@ -218,16 +191,16 @@ local function MakeLabel(y, text)
     return lbl
 end
 
-local TitleLbl = MakeLabel(5, "🛡️ AI躲避系统")
+local TitleLbl = MakeLabel(5, "🛡️ AI Dodge System")
 TitleLbl.Font = Enum.Font.GothamBold
 TitleLbl.TextColor3 = Color3.fromRGB(100, 200, 255)
 
-local ThreatLbl = MakeLabel(28, "👁 威胁: 0")
-local DangerLbl = MakeLabel(50, "⚠️ 危险: 0%")
-local FaceLbl = MakeLabel(72, "👤 面向: 无")
-local ActionLbl = MakeLabel(94, "🎮 动作: 待机")
+local ThreatLbl = MakeLabel(28, "👁 Threats: 0")
+local DangerLbl = MakeLabel(50, "⚠️ Danger: 0%")
+local FaceLbl = MakeLabel(72, "👤 Facing: None")
+local ActionLbl = MakeLabel(94, "🎮 Status: Idle")
 
--- 设置面板
+-- Settings Panel
 local SettingsPanel = Instance.new("Frame")
 SettingsPanel.Size = UDim2.new(0.9, 0, 0.7, 0)
 SettingsPanel.Position = UDim2.new(0.05, 0, 0.15, 0)
@@ -253,7 +226,7 @@ local TitleText = Instance.new("TextLabel")
 TitleText.Size = UDim2.new(0.7, 0, 1, 0)
 TitleText.Position = UDim2.new(0.04, 0, 0, 0)
 TitleText.BackgroundTransparency = 1
-TitleText.Text = "⚙️ AI躲避设置"
+TitleText.Text = "⚙️ AI Dodge Settings"
 TitleText.TextColor3 = Color3.new(1, 1, 1)
 TitleText.TextSize = 17
 TitleText.Font = Enum.Font.GothamBold
@@ -327,7 +300,7 @@ local function AddToggle(name, icon, default, callback)
     btn.Size = UDim2.new(0, 55, 0, 28)
     btn.Position = UDim2.new(1, -63, 0.5, -14)
     btn.BackgroundColor3 = default and Color3.fromRGB(80, 200, 80) or Color3.fromRGB(80, 80, 95)
-    btn.Text = default and "开" or "关"
+    btn.Text = default and "ON" or "OFF"
     btn.TextColor3 = Color3.new(1, 1, 1)
     btn.TextSize = 13
     btn.Font = Enum.Font.GothamBold
@@ -337,7 +310,7 @@ local function AddToggle(name, icon, default, callback)
     local on = default
     btn.MouseButton1Click:Connect(function()
         on = not on
-        btn.Text = on and "开" or "关"
+        btn.Text = on and "ON" or "OFF"
         btn.BackgroundColor3 = on and Color3.fromRGB(80, 200, 80) or Color3.fromRGB(80, 80, 95)
         callback(on)
     end)
@@ -439,37 +412,36 @@ local function AddSlider(name, icon, min, max, default, unit, callback)
     scrollY = scrollY + 67
 end
 
--- 设置选项
-AddSection("⚡ 主控制")
-AddToggle("启用系统", "🛡️", false, function(v)
+-- Settings Options
+AddSection("⚡ Main Controls")
+AddToggle("Enable System", "🛡️", false, function(v)
     Enabled = v
     StatusDot.BackgroundColor3 = v and Color3.fromRGB(80, 255, 80) or Color3.fromRGB(100, 100, 100)
     StatusPanel.Visible = v
     
-    -- 清理BodyGyro
     if not v and FaceGyro then
         FaceGyro:Destroy()
         FaceGyro = nil
     end
 end)
-AddToggle("调试模式", "🔍", false, function(v) DebugMode = v end)
+AddToggle("Debug Mode", "🔍", false, function(v) DebugMode = v end)
 
-AddSection("👤 面向设置")
-AddToggle("面向随机玩家", "🎯", true, function(v) Settings.FaceEnabled = v end)
-AddToggle("看向头部", "👁️", true, function(v) Settings.LookAtHead = v end)
-AddSlider("切换间隔", "⏰", 1, 8, 2.5, "s", function(v) Settings.TargetSwitchTime = v end)
-AddSlider("转向速度", "🔄", 1000, 20000, 5000, "", function(v) Settings.FaceSpeed = v end)
+AddSection("👤 Facing Settings")
+AddToggle("Face Players", "🎯", true, function(v) Settings.FaceEnabled = v end)
+AddToggle("Face Nearest", "📍", true, function(v) Settings.FaceNearest = v end)
+AddToggle("Look at Head", "👁️", true, function(v) Settings.LookAtHead = v end)
+AddSlider("Turn Speed", "🔄", 1000, 20000, 5000, "", function(v) Settings.FaceSpeed = v end)
 
-AddSection("🏃 躲避设置")
-AddSlider("检测范围", "📡", 30, 200, 100, "m", function(v) Settings.DetectionRange = v end)
-AddSlider("躲避距离", "↔️", 3, 20, 8, "m", function(v) Settings.DodgeDistance = v end)
-AddSlider("安全边距", "🔒", 1, 10, 3, "m", function(v) Settings.SafetyMargin = v end)
-AddSlider("最大速度", "💨", 16, 40, 24, "", function(v) Settings.MaxSpeed = v end)
-AddSlider("灵敏度", "⚡", 0.5, 3, 1.5, "x", function(v) Settings.DodgeSensitivity = v end)
+AddSection("🏃 Dodge Settings")
+AddSlider("Detection Range", "📡", 30, 200, 100, "m", function(v) Settings.DetectionRange = v end)
+AddSlider("Dodge Distance", "↔️", 3, 20, 8, "m", function(v) Settings.DodgeDistance = v end)
+AddSlider("Safety Margin", "🔒", 1, 10, 3, "m", function(v) Settings.SafetyMargin = v end)
+AddSlider("Max Speed", "💨", 16, 40, 24, "", function(v) Settings.MaxSpeed = v end)
+AddSlider("Sensitivity", "⚡", 0.5, 3, 1.5, "x", function(v) Settings.DodgeSensitivity = v end)
 
 Scroll.CanvasSize = UDim2.new(0, 0, 0, scrollY + 10)
 
--- 调试
+-- Debug
 local DebugParts = {}
 
 local function ClearDebug()
@@ -509,7 +481,7 @@ local function DebugBall(pos, size, color)
     task.delay(0.12, function() if p.Parent then p:Destroy() end end)
 end
 
--- 点到射线距离
+-- Point to ray distance
 local function PointToRay(point, origin, dir)
     local toPoint = point - origin
     local proj = toPoint:Dot(dir)
@@ -518,7 +490,7 @@ local function PointToRay(point, origin, dir)
     return (point - closest).Magnitude, closest
 end
 
--- 获取其他玩家
+-- Get other players (alive only)
 local function GetOtherPlayers()
     local others = {}
     for _, player in pairs(Players:GetPlayers()) do
@@ -531,6 +503,7 @@ local function GetOtherPlayers()
                     Player = player,
                     Head = head,
                     HRP = hrp,
+                    Humanoid = hum,
                 })
             end
         end
@@ -538,41 +511,101 @@ local function GetOtherPlayers()
     return others
 end
 
--- 选择面向目标
+-- Get nearest player to local player
+local function GetNearestPlayer(others)
+    if #others == 0 then return nil end
+    
+    local myChar = LocalPlayer.Character
+    if not myChar then return nil end
+    
+    local myHRP = myChar:FindFirstChild("HumanoidRootPart")
+    if not myHRP then return nil end
+    
+    local myPos = myHRP.Position
+    local nearest = nil
+    local nearestDist = math.huge
+    
+    for _, data in pairs(others) do
+        local dist = (data.HRP.Position - myPos).Magnitude
+        if dist < nearestDist then
+            nearestDist = dist
+            nearest = data
+        end
+    end
+    
+    return nearest
+end
+
+-- Check if target is still valid (alive)
+local function IsTargetValid(targetPlayer)
+    if not targetPlayer then return false end
+    if not targetPlayer.Character then return false end
+    
+    local hum = targetPlayer.Character:FindFirstChild("Humanoid")
+    if not hum or hum.Health <= 0 then return false end
+    
+    local hrp = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not hrp then return false end
+    
+    return true
+end
+
+-- Select face target (NEAREST player, auto-switch on death)
 local function SelectFaceTarget(others)
     if #others == 0 then
         CurrentFaceTarget = nil
         return nil
     end
     
-    local needSwitch = CurrentFaceTarget == nil or tick() - LastTargetSwitch > Settings.TargetSwitchTime
+    local now = tick()
+    local needNewTarget = false
     
-    if not needSwitch then
-        local valid = false
-        for _, o in pairs(others) do
-            if o.Player == CurrentFaceTarget then
-                valid = true
-                break
-            end
+    -- Check if current target is dead or missing
+    if not IsTargetValid(CurrentFaceTarget) then
+        needNewTarget = true
+    end
+    
+    -- Periodic check for nearer targets
+    if now - LastTargetCheck > Settings.TargetCheckInterval then
+        LastTargetCheck = now
+        if Settings.FaceNearest then
+            needNewTarget = true
         end
-        if not valid then needSwitch = true end
     end
     
-    if needSwitch then
-        CurrentFaceTarget = others[math.random(#others)].Player
-        LastTargetSwitch = tick()
+    if needNewTarget then
+        if Settings.FaceNearest then
+            -- Get nearest player
+            local nearest = GetNearestPlayer(others)
+            if nearest then
+                CurrentFaceTarget = nearest.Player
+            end
+        else
+            -- Random player (fallback)
+            CurrentFaceTarget = others[math.random(#others)].Player
+        end
     end
     
+    -- Find and return the target data
     for _, o in pairs(others) do
         if o.Player == CurrentFaceTarget then
             return o
         end
     end
     
+    -- Target not in list, get new one
+    if Settings.FaceNearest then
+        local nearest = GetNearestPlayer(others)
+        if nearest then
+            CurrentFaceTarget = nearest.Player
+            return nearest
+        end
+    end
+    
     return others[1]
 end
 
--- 获取或创建 BodyGyro (用于转向，不干扰移动！)
+-- Get or create BodyGyro
 local function GetOrCreateGyro(hrp)
     if FaceGyro and FaceGyro.Parent == hrp then
         return FaceGyro
@@ -584,7 +617,7 @@ local function GetOrCreateGyro(hrp)
     
     FaceGyro = Instance.new("BodyGyro")
     FaceGyro.Name = "FaceGyro"
-    FaceGyro.MaxTorque = Vector3.new(0, Settings.FaceSpeed, 0) -- 只控制Y轴
+    FaceGyro.MaxTorque = Vector3.new(0, Settings.FaceSpeed, 0)
     FaceGyro.P = 10000
     FaceGyro.D = 500
     FaceGyro.Parent = hrp
@@ -592,7 +625,7 @@ local function GetOrCreateGyro(hrp)
     return FaceGyro
 end
 
--- 主循环
+-- Main Loop
 RunService.Heartbeat:Connect(function(dt)
     if not Enabled then return end
     
@@ -606,7 +639,7 @@ RunService.Heartbeat:Connect(function(dt)
     local myPos = hrp.Position
     local others = GetOtherPlayers()
     
-    -- 收集威胁
+    -- Collect threats
     local dodgeDir = Vector3.new(0, 0, 0)
     local totalDanger = 0
     local threatCount = 0
@@ -620,7 +653,7 @@ RunService.Heartbeat:Connect(function(dt)
                 local dist = (head.Position - myPos).Magnitude
                 
                 if dist <= Settings.DetectionRange then
-                    -- 头部射线
+                    -- Head ray
                     local headDir = head.CFrame.LookVector
                     local headDist, headClosest = PointToRay(myPos, head.Position, headDir)
                     
@@ -648,7 +681,7 @@ RunService.Heartbeat:Connect(function(dt)
                         DebugBall(headClosest, 0.8, Color3.fromRGB(255, 255, 0))
                     end
                     
-                    -- 身体射线
+                    -- Body ray
                     local bodyDir = phrp.CFrame.LookVector
                     local bodyDist, bodyClosest = PointToRay(myPos, phrp.Position, bodyDir)
                     
@@ -670,9 +703,9 @@ RunService.Heartbeat:Connect(function(dt)
         end
     end
     
-    -- 更新UI
-    ThreatLbl.Text = "👁 威胁: " .. threatCount .. " 人"
-    DangerLbl.Text = string.format("⚠️ 危险: %.0f%%", math.min(totalDanger, 1) * 100)
+    -- Update UI
+    ThreatLbl.Text = "👁 Threats: " .. threatCount
+    DangerLbl.Text = string.format("⚠️ Danger: %.0f%%", math.min(totalDanger, 1) * 100)
     
     if totalDanger > 0.7 then
         DangerLbl.TextColor3 = Color3.fromRGB(255, 80, 80)
@@ -685,19 +718,19 @@ RunService.Heartbeat:Connect(function(dt)
         StatusDot.BackgroundColor3 = Color3.fromRGB(80, 255, 80)
     end
     
-    -- 选择面向目标
+    -- Select face target
     local faceTarget = nil
     if Settings.FaceEnabled then
         faceTarget = SelectFaceTarget(others)
     end
     
     if CurrentFaceTarget then
-        FaceLbl.Text = "👤 面向: " .. CurrentFaceTarget.DisplayName
+        FaceLbl.Text = "👤 Facing: " .. CurrentFaceTarget.DisplayName
     else
-        FaceLbl.Text = "👤 面向: 无"
+        FaceLbl.Text = "👤 Facing: None"
     end
     
-    -- 执行躲避移动
+    -- Execute dodge movement
     if dodgeDir.Magnitude > 0.1 and totalDanger > 0.1 then
         dodgeDir = dodgeDir.Unit
         
@@ -709,16 +742,16 @@ RunService.Heartbeat:Connect(function(dt)
         local targetPos = myPos + currentVelocity
         hum:MoveTo(targetPos)
         
-        ActionLbl.Text = totalDanger > 0.6 and "🎮 紧急躲避!" or "🎮 躲避中..."
+        ActionLbl.Text = totalDanger > 0.6 and "🎮 EVADING!" or "🎮 Dodging..."
         
         DebugRay(myPos, dodgeDir, 5, Color3.fromRGB(0, 255, 0))
         DebugBall(targetPos, 0.6, Color3.fromRGB(0, 255, 0))
     else
         currentVelocity = currentVelocity:Lerp(Vector3.new(0, 0, 0), 0.1)
-        ActionLbl.Text = "🎮 监控中..."
+        ActionLbl.Text = "🎮 Monitoring..."
     end
     
-    -- 面向目标 (使用 BodyGyro，不干扰移动！)
+    -- Face target (using BodyGyro)
     if Settings.FaceEnabled and faceTarget then
         local lookAtPos
         if Settings.LookAtHead then
@@ -736,7 +769,6 @@ RunService.Heartbeat:Connect(function(dt)
             gyro.CFrame = CFrame.new(myPos, myPos + toTarget)
         end
     else
-        -- 关闭面向时移除 Gyro
         if FaceGyro then
             FaceGyro:Destroy()
             FaceGyro = nil
@@ -744,7 +776,7 @@ RunService.Heartbeat:Connect(function(dt)
     end
 end)
 
--- 事件
+-- Events
 MainBtn.MouseButton1Click:Connect(function()
     SettingsPanel.Visible = not SettingsPanel.Visible
 end)
@@ -753,7 +785,7 @@ CloseBtn.MouseButton1Click:Connect(function()
     SettingsPanel.Visible = false
 end)
 
--- 长按开关
+-- Long press toggle
 local holding = false
 
 MainBtn.MouseButton1Down:Connect(function()
@@ -796,9 +828,8 @@ LocalPlayer.CharacterAdded:Connect(function()
 end)
 
 print("═══════════════════════════════════════════")
-print("✅ RAYSHIELD PRO AI躲避系统已加载!")
-print("💡 长按按钮开关 | 点击打开设置")
-print("🎯 使用BodyGyro转向，不干扰移动!")
-print("🛡️ Powered by RayShield Key System v3.0")
+print("✅ RAYSHIELD PRO AI Dodge System Loaded!")
+print("💡 Hold button to toggle | Click to open settings")
+print("🎯 Auto-faces nearest player, switches on death!")
+print("🛡️ Powered by RayShield Key System v4.0")
 print("═══════════════════════════════════════════")
-
