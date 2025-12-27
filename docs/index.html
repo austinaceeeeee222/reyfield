@@ -889,17 +889,41 @@
         let checkpoint1Done = false;
         let checkpoint2Done = false;
 
-        // 广告/重定向链接 (Linkvertise 风格)
+        // ═══════════════════════════════════════════════════════════════
+        // 🔧 LINKVERTISE 配置区域 - 在这里填入你的链接！
+        // ═══════════════════════════════════════════════════════════════
+        
+        // 📌 第一步: 去 https://linkvertise.com 注册账号
+        // 📌 第二步: 创建两个链接，Target URL 分别填:
+        //          - https://你的用户名.github.io/rayshield/?checkpoint=1
+        //          - https://你的用户名.github.io/rayshield/?checkpoint=2
+        // 📌 第三步: 把得到的 Linkvertise 链接填在下面
+        
+        const LINKVERTISE_CONFIG = {
+            // ⬇️ 把这个替换成你的第一个 Linkvertise 链接
+            CHECKPOINT_1: 'https://linkvertise.com/YOUR_ID/checkpoint1',
+            
+            // ⬇️ 把这个替换成你的第二个 Linkvertise 链接  
+            CHECKPOINT_2: 'https://linkvertise.com/YOUR_ID/checkpoint2',
+            
+            // 是否启用随机广告跳转 (true = 有概率先跳到随机网站)
+            ENABLE_RANDOM_ADS: true,
+            
+            // 随机广告概率 (0.3 = 30% 概率先跳随机网站)
+            RANDOM_AD_CHANCE: 0.3,
+        };
+        
+        // ═══════════════════════════════════════════════════════════════
+        
+        // 备用链接 (如果 Linkvertise 没配置)
         const adLinks = [
-            'https://linkvertise.com/', // 真正的 Linkvertise
-            'https://link-center.net/',
-            'https://link-target.net/',
-            'https://direct-link.net/'
+            LINKVERTISE_CONFIG.CHECKPOINT_1,
         ];
 
+        // 随机广告网站 (用户有概率先跳到这些网站)
         const randomAdLinks = [
             'https://www.google.com',
-            'https://www.youtube.com',
+            'https://www.youtube.com', 
             'https://www.twitter.com',
             'https://www.reddit.com'
         ];
@@ -1026,17 +1050,14 @@
 
         // Get Key 按钮 1
         function handleGetKey1() {
-            // 随机决定是否先跳转到随机网站
-            const skipToAd = Math.random() > 0.3; // 70% 概率直接去 Linkvertise
-
-            if (skipToAd) {
-                // 跳转到 Linkvertise 风格链接
-                const link = adLinks[Math.floor(Math.random() * adLinks.length)];
-                window.open(link, '_blank');
-            } else {
+            // 检查是否启用随机广告
+            if (LINKVERTISE_CONFIG.ENABLE_RANDOM_ADS && Math.random() < LINKVERTISE_CONFIG.RANDOM_AD_CHANCE) {
                 // 先跳到随机网站
                 const randomLink = randomAdLinks[Math.floor(Math.random() * randomAdLinks.length)];
                 window.open(randomLink, '_blank');
+            } else {
+                // 直接跳转到 Linkvertise 第一个检查点
+                window.open(LINKVERTISE_CONFIG.CHECKPOINT_1, '_blank');
             }
 
             // 模拟进度
@@ -1049,8 +1070,8 @@
 
         // Get Key 按钮 2
         function handleGetKey2() {
-            const link = adLinks[Math.floor(Math.random() * adLinks.length)];
-            window.open(link, '_blank');
+            // 跳转到 Linkvertise 第二个检查点
+            window.open(LINKVERTISE_CONFIG.CHECKPOINT_2, '_blank');
 
             // 生成 Key
             setTimeout(() => {
