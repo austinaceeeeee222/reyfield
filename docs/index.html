@@ -890,88 +890,54 @@
         let checkpoint2Done = false;
 
         // ═══════════════════════════════════════════════════════════════
-        // 🔧 配置区域
+        // 🔧 配置区域 - 在这里填你的 Linkvertise 链接！
         // ═══════════════════════════════════════════════════════════════
         
-        const CONFIG = {
-            // 跳转次数 (用户需要点几次广告才能拿到 Key)
-            REQUIRED_CLICKS: 2,
+        const LINKVERTISE = {
+            // ⬇️⬇️⬇️ 把你的 Linkvertise 链接填在这里 ⬇️⬇️⬇️
             
-            // 每次点击后的等待时间 (秒)
-            WAIT_TIME: 5,
+            LINK_1: 'https://link-center.net/2561635/CFnpd2mpKvmV',  // 第一个链接
+            LINK_2: 'https://link-hub.net/2561635/2sMzewa8OEMR',  // 第二个链接
+            
+            // ⬆️⬆️⬆️ 把你的 Linkvertise 链接填在上面 ⬆️⬆️⬆️
+            
+            // 是否在 Linkvertise 之前先跳一次随机广告？
+            RANDOM_AD_FIRST: true,
+            
+            // 随机广告的概率 (0.5 = 50% 概率)
+            RANDOM_AD_CHANCE: 0.5,
         };
         
         // ═══════════════════════════════════════════════════════════════
-        // 🎰 随机广告链接池 - VPN、加速器、游戏、软件推广
+        // 🎰 随机广告链接池 (在 Linkvertise 之前可能会先跳这些)
         // ═══════════════════════════════════════════════════════════════
         
-        const adLinks = [
-            // 🔒 VPN 推广
+        const randomAdLinks = [
+            // 🔒 VPN
             'https://www.expressvpn.com/',
             'https://nordvpn.com/',
             'https://surfshark.com/',
             'https://www.cyberghostvpn.com/',
-            'https://www.purevpn.com/',
-            'https://www.ipvanish.com/',
-            'https://www.hotspotshield.com/',
             'https://protonvpn.com/',
-            'https://www.tunnelbear.com/',
-            'https://windscribe.com/',
-            'https://www.vyprvpn.com/',
-            'https://www.privatevpn.com/',
             
             // 🚀 游戏加速器
             'https://www.exitlag.com/',
             'https://www.wtfast.com/',
             'https://www.mudfish.net/',
-            'https://www.pingzapper.com/',
-            'https://haste.net/',
-            'https://www.outfox.com/',
-            'https://www.noping.com/',
-            'https://www.battleping.com/',
             
-            // 🎮 游戏平台/网站
+            // 🎮 游戏平台
             'https://www.g2a.com/',
             'https://www.kinguin.net/',
             'https://www.cdkeys.com/',
-            'https://www.greenmangaming.com/',
-            'https://www.humblebundle.com/',
-            'https://www.fanatical.com/',
-            'https://gg.deals/',
-            'https://isthereanydeal.com/',
             
-            // 💻 软件/工具
+            // 💻 软件
             'https://www.opera.com/',
             'https://brave.com/',
-            'https://www.ccleaner.com/',
-            'https://www.malwarebytes.com/',
-            'https://www.avast.com/',
-            'https://www.avg.com/',
-            'https://www.bitdefender.com/',
-            
-            // 🎵 娱乐/流媒体
-            'https://www.spotify.com/',
-            'https://www.deezer.com/',
-            'https://tidal.com/',
-            'https://www.crunchyroll.com/',
-            'https://www.funimation.com/',
-            
-            // 📱 实用网站
-            'https://www.honey.com/',
-            'https://www.rakuten.com/',
-            'https://www.topcashback.com/',
-            'https://slickdeals.net/',
-            
-            // 🔗 短链接/推广平台
-            'https://linkvertise.com/',
-            'https://www.shorte.st/',
-            'https://ouo.io/',
-            'https://cutt.ly/',
         ];
 
         // 🎲 获取随机广告链接
         function getRandomAdLink() {
-            return adLinks[Math.floor(Math.random() * adLinks.length)];
+            return randomAdLinks[Math.floor(Math.random() * randomAdLinks.length)];
         }
 
         // 生成验证码
@@ -1099,14 +1065,22 @@
         
         // Get Key 按钮 1
         function handleGetKey1() {
-            // 打开随机广告链接
-            const randomAd = getRandomAdLink();
-            window.open(randomAd, '_blank');
-            
-            clickCount++;
-            
-            // 显示点击了哪个网站
-            showToast('🔗 Opening: ' + new URL(randomAd).hostname);
+            // 50% 概率先跳随机广告
+            if (LINKVERTISE.RANDOM_AD_FIRST && Math.random() < LINKVERTISE.RANDOM_AD_CHANCE) {
+                const randomAd = getRandomAdLink();
+                window.open(randomAd, '_blank');
+                showToast('🔗 Sponsor: ' + new URL(randomAd).hostname);
+                
+                // 2秒后再打开 Linkvertise
+                setTimeout(() => {
+                    window.open(LINKVERTISE.LINK_1, '_blank');
+                    showToast('🔑 Opening Linkvertise...');
+                }, 2000);
+            } else {
+                // 直接打开 Linkvertise 第一个链接
+                window.open(LINKVERTISE.LINK_1, '_blank');
+                showToast('🔑 Opening Linkvertise...');
+            }
 
             // 模拟进度
             simulateProgress('progress1', 'progress-text1', () => {
@@ -1118,13 +1092,22 @@
 
         // Get Key 按钮 2
         function handleGetKey2() {
-            // 打开另一个随机广告链接
-            const randomAd = getRandomAdLink();
-            window.open(randomAd, '_blank');
-            
-            clickCount++;
-            
-            showToast('🔗 Opening: ' + new URL(randomAd).hostname);
+            // 50% 概率先跳随机广告
+            if (LINKVERTISE.RANDOM_AD_FIRST && Math.random() < LINKVERTISE.RANDOM_AD_CHANCE) {
+                const randomAd = getRandomAdLink();
+                window.open(randomAd, '_blank');
+                showToast('🔗 Sponsor: ' + new URL(randomAd).hostname);
+                
+                // 2秒后再打开 Linkvertise
+                setTimeout(() => {
+                    window.open(LINKVERTISE.LINK_2, '_blank');
+                    showToast('🔑 Opening Linkvertise...');
+                }, 2000);
+            } else {
+                // 直接打开 Linkvertise 第二个链接
+                window.open(LINKVERTISE.LINK_2, '_blank');
+                showToast('🔑 Opening Linkvertise...');
+            }
 
             // 生成 Key
             setTimeout(() => {
