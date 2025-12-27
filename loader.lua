@@ -15,7 +15,7 @@
 -- ═══════════════════════════════════════════════════════════════════
 local CONFIG = {
     -- Key 验证网站链接 (你的 GitHub Pages 或其他托管链接)
-    KEY_WEBSITE = "https://github.com/austinaceeeeee222/reyfield/", -- 替换为你的网站链接
+    KEY_WEBSITE = "https://austinaceeeeee222.github.io/reyfield/", -- 替换为你的网站链接
     
     -- 主脚本的 Raw 链接
     MAIN_SCRIPT = "https://raw.githubusercontent.com/austinaceeeeee222/reyfield/refs/heads/main/main.lua", -- 替换为你的脚本链接
@@ -579,6 +579,7 @@ end
 
 -- 启动
 Main()
+
 
 
 
