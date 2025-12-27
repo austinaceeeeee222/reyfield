@@ -14,7 +14,7 @@
     ║  • Smart pathfinding dodge                                               ║
     ║  • Auto-face nearest + death switch                                      ║
     ║  • GUI Text Detection System                                             ║
-    ║  • 14-Second Precision Calculation Mode                                  ║
+    ║  • 16-Second FORCE-FACING Precision Mode                                 ║
     ║  • Right Arm Precision Aiming                                            ║
     ╚══════════════════════════════════════════════════════════════════════════╝
 ]]
@@ -91,7 +91,7 @@ local function ShowWelcomeNotification()
     VersionLabel.Size = UDim2.new(0, 300, 0, 15)
     VersionLabel.Position = UDim2.new(0, 80, 0, 60)
     VersionLabel.BackgroundTransparency = 1
-    VersionLabel.Text = "🎯 14-Second Precision Mode + GUI Detection"
+    VersionLabel.Text = "🎯 16-Second FORCE-FACE Precision Mode"
     VersionLabel.TextSize = 11
     VersionLabel.Font = Enum.Font.Gotham
     VersionLabel.TextColor3 = Color3.fromRGB(255, 200, 100)
@@ -164,20 +164,23 @@ local FaceGyro = nil
 local LastDodgeDir = Vector3.new(0, 0, 0)
 local DodgeMomentum = 0
 
--- 14-Second Precision Mode State
+-- 16-Second Precision Mode State
 local PrecisionModeState = {
     Active = false,
     StartTime = 0,
-    Duration = 14,
+    Duration = 16,  -- 16 seconds
     TargetPlayer = nil,
     TargetDirection = Vector3.zero,
     CalculatedAt = 0,
-    RecalculateInterval = 0.1,  -- Recalculate every 0.1 seconds for precision
+    RecalculateInterval = 0.08,  -- Recalculate every 0.08 seconds for maximum precision
     RightArmCFrame = nil,
     LastGUICheck = 0,
-    GUICheckInterval = 0.2,
+    GUICheckInterval = 0.15,
     TriggerText = "Players will appear in",
     WasTriggered = false,
+    ForceFacing = true,  -- Force face target if not aligned
+    FaceThreshold = 0.85,  -- Dot product threshold for "facing"
+    LastForceTime = 0,
 }
 
 -- Spatial Cache
@@ -235,7 +238,7 @@ local Settings = {
     ArmRayWeight = 0.5,
     PrioritizeSafeSpace = true,
     
-    -- 14-Second Mode
+    -- 16-Second Force-Face Mode
     PrecisionModeEnabled = true,
     ContinuousDodge = true,  -- Never stop dodging in precision mode
     PrecisionRecalcRate = 0.1,
@@ -328,7 +331,8 @@ local function CheckForTriggerText()
             PrecisionModeState.CalculatedAt = 0
             
             print("🎯 [PRECISION MODE] Trigger detected: " .. (text or ""))
-            print("⏱️ Starting 14-second precision calculation...")
+            print("⏱️ Starting 16-second FORCE-FACING precision calculation!")
+            print("⚡ Force facing ENABLED - Will SNAP to target if not aligned!")
         end
         return true
     else
@@ -636,12 +640,14 @@ AddToggle("Enable System", "🛡️", false, function(v)
 end)
 AddToggle("Debug Mode", "🔍", false, function(v) DebugMode = v end)
 
-AddSection("🎯 14-Second Precision Mode")
+AddSection("🎯 16-Second FORCE-FACE Mode")
 AddToggle("Precision Mode", "⏱️", true, function(v) Settings.PrecisionModeEnabled = v end)
 AddToggle("GUI Detection", "📡", true, function(v) Settings.GUIDetectionEnabled = v end)
 AddToggle("Continuous Dodge", "🏃", true, function(v) Settings.ContinuousDodge = v end)
+AddToggle("Force Face Target", "⚡", true, function(v) PrecisionModeState.ForceFacing = v end)
 AddToggle("Right Arm Precision", "💪", true, function(v) Settings.RightArmPrecision = v end)
 AddSlider("Precision Calc Rate", "⚡", 0.05, 0.5, 0.1, "s", function(v) Settings.PrecisionRecalcRate = v end)
+AddSlider("Face Threshold", "🎯", 0.5, 0.99, 0.85, "", function(v) PrecisionModeState.FaceThreshold = v end)
 
 AddSection("🧠 Advanced AI")
 AddToggle("Predictive Dodge", "🎯", true, function(v) Settings.PredictiveMode = v end)
@@ -1141,8 +1147,47 @@ local function GetOrCreateGyro(hrp)
     return FaceGyro
 end
 
+-- Check if character is facing target direction
+local function IsFacingTarget(hrp, targetPos)
+    if not hrp then return false end
+    
+    local myPos = hrp.Position
+    local myLookVector = hrp.CFrame.LookVector
+    local toTarget = (targetPos - myPos)
+    toTarget = Vector3.new(toTarget.X, 0, toTarget.Z)
+    
+    if toTarget.Magnitude < 0.5 then return true end
+    
+    local dot = myLookVector:Dot(toTarget.Unit)
+    return dot >= PrecisionModeState.FaceThreshold
+end
+
+-- Force face target immediately by setting CFrame directly
+local function ForceFaceTarget(hrp, targetPos)
+    if not hrp then return end
+    
+    local myPos = hrp.Position
+    local toTarget = (targetPos - myPos)
+    toTarget = Vector3.new(toTarget.X, 0, toTarget.Z)
+    
+    if toTarget.Magnitude < 0.5 then return end
+    
+    -- Create new CFrame facing target
+    local newCFrame = CFrame.new(myPos, myPos + toTarget)
+    
+    -- Preserve the Y rotation only (don't affect position)
+    local _, ry, _ = newCFrame:ToEulerAnglesYXZ()
+    local currentCFrame = hrp.CFrame
+    local cx, _, cz = currentCFrame:ToEulerAnglesYXZ()
+    
+    -- Apply rotation
+    hrp.CFrame = CFrame.new(myPos) * CFrame.Angles(0, ry, 0)
+    
+    PrecisionModeState.LastForceTime = tick()
+end
+
 -- ═══════════════════════════════════════════════════════════════════════════
--- 14-SECOND PRECISION MODE
+-- 16-SECOND PRECISION MODE
 -- ═══════════════════════════════════════════════════════════════════════════
 local function UpdatePrecisionMode(myPos, myChar, others)
     if not Settings.PrecisionModeEnabled then
@@ -1182,6 +1227,10 @@ local function UpdatePrecisionMode(myPos, myChar, others)
     local pulse = math.sin(tick() * 8) * 0.3 + 0.7
     PrecisionIndicator.BackgroundTransparency = 1 - pulse
     
+    -- Get HumanoidRootPart
+    local hrp = myChar:FindFirstChild("HumanoidRootPart")
+    if not hrp then return end
+    
     -- Recalculate target direction
     local now = tick()
     if now - PrecisionModeState.CalculatedAt >= Settings.PrecisionRecalcRate then
@@ -1192,11 +1241,29 @@ local function UpdatePrecisionMode(myPos, myChar, others)
             PrecisionModeState.TargetPlayer = nearest.Player
             PrecisionModeState.TargetDirection = (nearest.HRP.Position - myPos).Unit
             
+            local targetPos = nearest.HRP.Position
+            
+            -- Check if facing target, if not FORCE FACE
+            if PrecisionModeState.ForceFacing then
+                local isFacing = IsFacingTarget(hrp, targetPos)
+                
+                if not isFacing then
+                    -- FORCE FACE TARGET IMMEDIATELY
+                    ForceFaceTarget(hrp, targetPos)
+                    
+                    if DebugMode then
+                        print("⚠️ [FORCE FACE] Not facing target, forcing rotation!")
+                    end
+                end
+            end
+            
             -- Aim right arm at target
             if Settings.RightArmPrecision then
-                AimRightArmAt(myChar, nearest.HRP.Position)
-                ArmLbl.Text = "💪 Arm Aim: " .. nearest.Player.DisplayName
-                ArmLbl.TextColor3 = Color3.fromRGB(100, 255, 150)
+                AimRightArmAt(myChar, targetPos)
+                
+                local facingStatus = IsFacingTarget(hrp, targetPos) and "✓" or "⚡FORCING"
+                ArmLbl.Text = "💪 " .. facingStatus .. " " .. nearest.Player.DisplayName
+                ArmLbl.TextColor3 = IsFacingTarget(hrp, targetPos) and Color3.fromRGB(100, 255, 150) or Color3.fromRGB(255, 200, 100)
             end
         end
     end
@@ -1375,9 +1442,27 @@ RunService.Heartbeat:Connect(function(dt)
         toTarget = Vector3.new(toTarget.X, 0, toTarget.Z)
         
         if toTarget.Magnitude > 0.5 then
-            local gyro = GetOrCreateGyro(hrp)
-            gyro.MaxTorque = Vector3.new(0, Settings.FaceSpeed, 0)
-            gyro.CFrame = CFrame.new(myPos, myPos + toTarget)
+            -- In precision mode, check if facing and force if not
+            if PrecisionModeState.Active and PrecisionModeState.ForceFacing then
+                local isFacing = IsFacingTarget(hrp, lookAtPos)
+                
+                if not isFacing then
+                    -- Force face immediately
+                    ForceFaceTarget(hrp, lookAtPos)
+                end
+                
+                -- Also use gyro for smooth follow-up
+                local gyro = GetOrCreateGyro(hrp)
+                gyro.MaxTorque = Vector3.new(0, Settings.FaceSpeed * 2, 0)  -- Extra power in precision mode
+                gyro.P = 25000  -- Higher precision
+                gyro.D = 1500
+                gyro.CFrame = CFrame.new(myPos, myPos + toTarget)
+            else
+                -- Normal facing mode
+                local gyro = GetOrCreateGyro(hrp)
+                gyro.MaxTorque = Vector3.new(0, Settings.FaceSpeed, 0)
+                gyro.CFrame = CFrame.new(myPos, myPos + toTarget)
+            end
         end
     else
         if FaceGyro then FaceGyro:Destroy() FaceGyro = nil end
@@ -1449,7 +1534,8 @@ end)
 print("═══════════════════════════════════════════════════════════════")
 print("✅ RAYSHIELD PRO ULTRA MAX v6.0 Loaded!")
 print("═══════════════════════════════════════════════════════════════")
-print("🎯 14-Second Precision Mode Active")
+print("🎯 16-Second FORCE-FACE Precision Mode Active")
+print("⚡ If not facing target, will FORCE SNAP rotation!")
 print("📡 GUI Text Detection: 'Players will appear in'")
 print("💪 Right Arm Precision Aiming Enabled")
 print("📐 24-Ray Spatial Awareness System")
