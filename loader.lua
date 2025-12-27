@@ -18,7 +18,7 @@ local CONFIG = {
     KEY_WEBSITE = "https://YOUR_USERNAME.github.io/rayshield/", -- 替换为你的网站链接
     
     -- 主脚本的 Raw 链接
-    MAIN_SCRIPT = "https://raw.githubusercontent.com/YOUR_USERNAME/rayshield/main/main.lua", -- 替换为你的脚本链接
+    MAIN_SCRIPT = "https://raw.githubusercontent.com/austinaceeeeee222/reyfield/refs/heads/main/main.lua", -- 替换为你的脚本链接
     
     -- Key 有效期 (小时)
     KEY_DURATION = 24,
@@ -579,4 +579,5 @@ end
 
 -- 启动
 Main()
+
 
